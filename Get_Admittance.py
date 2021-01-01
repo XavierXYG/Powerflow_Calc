@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def get_admittance_matrix(Topology):
     num_rows = Topology.shape[0]
@@ -14,11 +15,10 @@ def get_admittance_matrix(Topology):
                 admittance_matrix[i][j] = -Topology[i][j]
     return admittance_matrix
 
-'''
+
 if __name__ == "__main__":
-    test = np.array([[1, 2, 1],
-                    [3, 4, 5],
-                    [1, 2, 3]])
-    result = get_admittance_matrix(test)
-    print(result)
-'''
+
+    a = 1+j
+    b = 1
+    print(a+b)
+
