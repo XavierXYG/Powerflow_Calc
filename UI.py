@@ -4,11 +4,11 @@ from PyQt5.QtWidgets import QApplication, QGraphicsScene, QGraphicsView
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtGui import QColor, QPen, QPainter
-from PyQt5.QtCore import QLine
+from PyQt5.QtCore import QLine, QPointF
 
 # 图元库
-from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
+from PyQt5.QtGui import QPixmap, QPainterPath
 
 
 class MainWindow(QMainWindow):
@@ -49,6 +49,29 @@ class GraphicScene(QGraphicsScene):
         # 设置画背景的画笔
         self.setBackgroundBrush(self._color_background)
         self.setSceneRect(0, 0, 500, 500)
+
+        self.nodes = []  # 存储图元
+        self.edges = []  # 存储连线
+
+    def add_node(self, node):
+        self.nodes.append(node)
+        self.addItem(node)
+
+    def remove_node(self, node):
+        self.nodes.remove(node)
+        # 删除图元时，遍历与其连接的线，并移除
+        for edge in self.edges:
+            if edge.edge_wrap.start_item is node or edge.edge_wrap.end_item is node:
+                self.remove_edge(edge)
+        self.removeItem(node)
+
+    def add_edge(self, edge):
+        self.edges.append(edge)
+        self.addItem(edge)
+
+    def remove_edge(self, edge):
+        self.edges.remove(edge)
+        self.removeItem(edge)
 
     # override
     def drawBackground(self, painter, rect):
@@ -95,6 +118,9 @@ class GraphicView(QGraphicsView):
         self.gr_scene = graphic_scene  # 将scene传入此处托管，方便在view中维护
         self.parent = parent
 
+        self.edge_enable = False  # 用来记录目前是否可以画线条
+        self.drag_edge = None  # 记录拖拽时的线
+
         self.init_ui()
 
     def init_ui(self):
@@ -116,20 +142,53 @@ class GraphicView(QGraphicsView):
 
     # override
     def keyPressEvent(self, event):
+        # 当按下N键时，会在scene的（0,0）位置出现此图元
         if event.key() == Qt.Key_N:
-            # 当按下N键时，会在scene的（0,0）位置出现此图元
             gr_item = GraphicItem()
             gr_item.setPos(0, 0)
-            self.gr_scene.addItem(gr_item)
+            self.gr_scene.add_node(gr_item)
+
+        # 当按下E键时，启动线条功能，再次按下则是关闭
+        if event.key() == Qt.Key_E:
+            self.edge_enable = ~self.edge_enable
 
     # override
     def mousePressEvent(self, event):
-        """ 获取点击位置的图元， """
-        super().mousePressEvent(event)
+        item = self.get_item_at_click(event)
         if event.button() == Qt.RightButton:   # 判断鼠标右键点击
+            if isinstance(item, GraphicItem):
+                self.gr_scene.remove_node(item)
+        elif self.edge_enable:
+            if isinstance(item, GraphicItem):  # 判断点击对象是否为图元的实例, 确认起点是图元后，开始拖拽
+                self.edge_drag_start(item)
+        else:
+            # 如果写到最开头，则线条拖拽功能会不起作用
+            super().mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if self.edge_enable:
+            # 拖拽结束后，关闭此功能
+            self.edge_enable = False
             item = self.get_item_at_click(event)
-            if isinstance(item, GraphicItem):  # 判断点击对象是否为图元的实例
-                self.gr_scene.removeItem(item)
+            # 终点图元不能是起点图元，即无环图
+            if isinstance(item, GraphicItem) and item is not self.drag_start_item:
+                self.edge_drag_end(item)
+            else:
+                self.drag_edge.remove()
+                self.drag_edge = None
+        else:
+            super().mouseReleaseEvent(event)
+
+    # override
+    def mouseMoveEvent(self, event):
+        # 实时更新线条
+        pos = event.pos()
+        if self.edge_enable and self.drag_edge is not None:
+            sc_pos = self.mapToScene(pos)
+            self.drag_edge.gr_edge.set_dst(sc_pos.x(), sc_pos.y())
+            self.drag_edge.gr_edge.update()
+        super().mouseMoveEvent(event)
+
 
     def get_item_at_click(self, event):
         """ 获取点击位置的图元，无则返回None. """
@@ -142,6 +201,16 @@ class GraphicView(QGraphicsView):
         area = self.rubberBandRect()
         return self.items(area)
 
+    def edge_drag_start(self, item):
+        self.drag_start_item = item
+        self.drag_edge = Edge(self.gr_scene, self.drag_start_item, None)  # 开始拖拽线条，注意到拖拽终点为None
+
+    def edge_drag_end(self, item):
+        new_edge = Edge(self.gr_scene, self.drag_start_item, item)  # 拖拽结束
+        self.drag_edge.remove()  # 删除拖拽时画的线
+        self.drag_edge = None
+        new_edge.store()  # 保存最终产生的连接线
+
 
 class GraphicItem(QGraphicsPixmapItem):
     def __init__(self, parent=None):
@@ -152,6 +221,115 @@ class GraphicItem(QGraphicsPixmapItem):
         self.setPixmap(self.pix)  # 设置图元
         self.setFlag(QGraphicsItem.ItemIsSelectable)  # ***设置图元是可以被选择的
         self.setFlag(QGraphicsItem.ItemIsMovable)     # ***设置图元是可以被移动的
+
+    def mouseMoveEvent(self, event):
+        super().mouseMoveEvent(event)
+        # 如果图元被选中，就更新连线，这里更新的是所有。可以优化，只更新连接在图元上的。
+        if self.isSelected():
+            for gr_edge in self.scene().edges:
+                gr_edge.edge_wrap.update_positions()
+
+
+class Edge:
+    def __init__(self, scene, start_item, end_item):
+        # 参数分别为场景、开始图元、结束图元
+        super().__init__()
+        self.scene = scene
+        self.start_item = start_item
+        self.end_item = end_item
+
+        # 线条图形在此处创建
+        self.gr_edge = GraphicEdge(self)
+        # 此类一旦被初始化就在添加进scene
+        self.scene.add_edge(self.gr_edge)
+
+        # 开始更新
+        if self.start_item is not None:
+            self.update_positions()
+
+    # 最终保存进scene
+    def store(self):
+        self.scene.add_edge(self.gr_edge)
+
+    # 更新位置
+    def update_positions(self):
+        # src_pos 记录的是开始图元的位置，此位置为图元的左上角
+        src_pos = self.start_item.pos()
+        # 想让线条从图元的中心位置开始，让他们都加上偏移
+        patch = self.start_item.width / 2
+        self.gr_edge.set_src(src_pos.x() + patch, src_pos.y() + patch)
+        # 如果结束位置图元也存在，则做同样操作
+        if self.end_item is not None:
+            end_pos = self.end_item.pos()
+            self.gr_edge.set_dst(end_pos.x() + patch, end_pos.y() + patch)
+        else:
+            self.gr_edge.set_dst(src_pos.x() + patch, src_pos.y() + patch)
+        self.gr_edge.update()
+
+    def remove_from_current_items(self):
+        self.end_item = None
+        self.start_item = None
+
+    # 移除线条
+    def remove(self):
+        self.remove_from_current_items()
+        self.scene.remove_edge(self.gr_edge)
+        self.gr_edge = None
+
+
+class GraphicEdge(QGraphicsPathItem):
+    def __init__(self, edge_wrap, parent=None):
+        super().__init__(parent)
+        # 这个参数是GraphicEdge的包装类，见下文
+        self.edge_wrap = edge_wrap
+        self.width = 3.0  # 线条的宽度
+        self.pos_src = [0, 0]  # 线条起始位置 x，y坐标
+        self.pos_dst = [0, 0]  # 线条结束位置
+
+        self._pen = QPen(QColor("#000"))  # 画线条的
+        self._pen.setWidthF(self.width)
+
+        self._pen_dragging = QPen(QColor("#000"))  # 画拖拽线条时线条的
+        self._pen_dragging.setStyle(Qt.DashDotLine)
+        self._pen_dragging.setWidthF(self.width)
+
+        self.setFlag(QGraphicsItem.ItemIsSelectable)  # 线条可选
+        self.setZValue(-1)  # 让线条出现在所有图元的最下层
+
+    def set_src(self, x, y):
+        self.pos_src = [x, y]
+
+    def set_dst(self, x, y):
+        self.pos_dst = [x, y]
+
+    # 计算线条的路径
+    def calc_path(self):
+        path = QPainterPath(QPointF(self.pos_src[0], self.pos_src[1]))  # 起点
+        path.lineTo(self.pos_dst[0], self.pos_dst[1])  # 终点
+        return path
+
+    # override
+    def boundingRect(self):
+        return self.shape().boundingRect()
+
+    # override
+    def shape(self):
+        return self.calc_path()
+
+    # override
+    def paint(self, painter, graphics_item, widget=None):
+        self.setPath(self.calc_path())  # 设置路径
+        path = self.path()
+        if self.edge_wrap.end_item is None:
+            # 包装类中存储了线条开始和结束位置的图元
+            # 刚开始拖拽线条时，并没有结束位置的图元，所以是None
+            # 这个线条画的是拖拽路径，点线
+            painter.setPen(self._pen_dragging)
+            painter.drawPath(path)
+        else:
+            # 这画的才是连接后的线
+            painter.setPen(self._pen)
+            painter.drawPath(path)
 
 
 def demo_run():
