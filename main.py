@@ -21,7 +21,9 @@ class transformer:
     def get_transformer(Un, Sn, Pk, Uk, Io, Po, ratio):  # Un,Sn,Pk,Uk%,Io%,Po,ratio
         pass
 
+#定义全局变量
 Topology=[[]]
+YYY=list() #YYY用做牛顿迭代法中的Y
 
 class BUS_PQ:
     def __init__(self,P,Q,position):
@@ -36,7 +38,7 @@ class BUS_Vtheta:
         pass
 
 #type 1:cu+n=1+S=300mm2
-def get_wire(type,Dm,r,length):#(材料，面积，股数)，Dm，r,长度,
+def get_wire(type, Dm, diameter, line_distance, length, S_wire):#(材料，股数)，Dm，导线直径，分裂线距离，导线长度, 导体横截面积
     pass
 
 def get_transformer(Un,Sn,Pk,Uk,Io,Po,ratio):#Un,Sn,Pk,Uk%,Io%,Po,ratio
@@ -48,13 +50,13 @@ def transform(Topology,*args ):#变压器的权重为负，
 def get_admittance_matrix(Topology):
     pass
 
-def calculate_A(admittance_matrix,*args):
+def calculate_F(admittance_matrix,*args):
     pass
 
-def calculate_Y(*args):
+def calculate_YYY(*args):
     pass
 
-def Newton_iteraion(Y, A, X, accuracy):  # Y=AX
+def Newton_iteraion(YYY, F, accuracy):  # YYY=F(X)，非线性方程
     pass
 
 #def calculate_S():
