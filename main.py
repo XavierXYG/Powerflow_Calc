@@ -14,12 +14,13 @@
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
-class transformer:
-    def __init__(self):
-        pass
 
-    def get_transformer(Un, Sn, Pk, Uk, Io, Po, ratio):  # Un,Sn,Pk,Uk%,Io%,Po,ratio
-        pass
+# class transformer:
+#     def __init__(self):
+#         pass
+#
+#     def get_transformer(Un, Sn, Pk, Uk, Io, Po, ratio):  # Un,Sn,Pk,Uk%,Io%,Po,ratio
+#         pass
 
 #定义全局变量
 Topology=[[]]
@@ -59,5 +60,5 @@ def calculate_YYY(*args):
 def Newton_iteraion(YYY, F, accuracy):  # YYY=F(X)，非线性方程
     pass
 
-#def calculate_S():
+def calculate_S():
     pass
