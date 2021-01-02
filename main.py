@@ -24,7 +24,7 @@
 
 #定义全局变量
 Topology=[[]]
-YYY=list() #YYY用做牛顿迭代法中的Y
+global_Y=list() #global_Y 用做牛顿迭代法中的Y=F(X)
 
 class BUS_PQ:
     def __init__(self,P,Q,position):
@@ -54,10 +54,10 @@ def get_admittance_matrix(Topology):
 def calculate_F(admittance_matrix,*args):
     pass
 
-def calculate_YYY(*args):
+def calculate_global_Y(*args):
     pass
 
-def Newton_iteraion(YYY, F, accuracy):  # YYY=F(X)，非线性方程
+def Newton_iteration(global_Y, F, accuracy):  # global_Y=F(X)，非线性方程
     pass
 
 def calculate_S():
