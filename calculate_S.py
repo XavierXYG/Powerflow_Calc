@@ -1,7 +1,6 @@
 import math
 import numpy
 
-
 def power_flow(U_matrix, admittance_matrix):
     size_n = int(numpy.array(U_matrix).shape[0] /2)
     S_Topology = numpy.zeros((size_n, size_n), dtype=numpy.complex_)
