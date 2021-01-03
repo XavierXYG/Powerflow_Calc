@@ -53,6 +53,7 @@ class GraphicScene(QGraphicsScene):
         self.nodes = []  # 存储图元
         self.edges = []  # 存储连线
 
+
     def add_node(self, node):
         self.nodes.append(node)
         self.addItem(node)
@@ -237,6 +238,7 @@ class Edge:
         self.scene = scene
         self.start_item = start_item
         self.end_item = end_item
+
 
         # 线条图形在此处创建
         self.gr_edge = GraphicEdge(self)
