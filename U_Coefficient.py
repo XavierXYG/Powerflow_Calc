@@ -11,13 +11,6 @@ num = 2
 m, n = symbols('m,n')
 Global_U_coefficient = sympy.zeros(1, 2* num)
 
-'''
-def GetBus(PQ_PV, BusNum):
-    PQ_weight = PQ_PV[[start, start+BusNum[0]-1]]
-    PV_weight = PQ_PV[[start+BusNum[0], start+BusNum[1]-1]]
-    VA = PQ_PV[[end-1, end]]
-    return [PQ_weight, PV_weight,VA]
-'''
 
 def ef_coefficient(admittance_matrix,  PQ_PV, BusNum):  #e_f_matrix is ei, fi initial value
     size_PQ = BusNum[0]
@@ -52,17 +45,11 @@ def ef_coefficient(admittance_matrix,  PQ_PV, BusNum):  #e_f_matrix is ei, fi in
         Global_U_coefficient[2*i +1] = Global_X[2*i]**2 + Global_X[2*i+1]**2    # V_pv coefficient
         Global_U_coefficient[2*i] -=PQ_PV[i][0]
         Global_U_coefficient[2*i+1] -=(PQ_PV[i][1])**2
-
-
-
-
-
-
     return Global_U_coefficient
 
 
 
-
+'''
 if __name__ == "__main__":
     admittance_matrix = np.array([[0.12 -0.16j, -0.12 + 0.16j],
                          [-0.12 + 0.16j, 0.12 - 0.16j]])
@@ -72,7 +59,7 @@ if __name__ == "__main__":
     busnum = [1,0,1]
     U_coefficient = ef_coefficient(admittance_matrix, PQ_PV, BusNum = busnum)
     print(U_coefficient)
-
+'''
 
 
 
