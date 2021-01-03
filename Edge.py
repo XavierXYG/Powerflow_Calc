@@ -5,10 +5,10 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtGui import QColor, QPen, QPainter
 from PyQt5.QtCore import QLine, QPointF
-
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
 from PyQt5.QtGui import QPixmap, QPainterPath
+import numpy
 
 
 class Edge:
@@ -18,7 +18,6 @@ class Edge:
         self.scene = scene
         self.start_item = start_item
         self.end_item = end_item
-
 
         # 线条图形在此处创建
         self.gr_edge = GraphicEdge(self)
@@ -112,4 +111,56 @@ class GraphicEdge(QGraphicsPathItem):
             # 这画的才是连接后的线
             painter.setPen(self._pen)
             painter.drawPath(path)
+
+
+class QT_wire(Edge):
+    def __init__(self, scene, start_item, end_item, type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0):
+        super().__init__(scene, start_item, end_item)
+        self.type = type
+        self.Dm = Dm
+        self.diameter = diameter
+        self.line_distance = line_distance
+        self.length = length
+        self.S_wire = S_wire
+        self.stored_data = {}
+        self.pix = QPixmap("./QT_wire.jpg")
+
+    def store_data(self):
+        self.stored_data = {'type': self.type, 'Dm': self.Dm, 'diameter': self.diameter,
+                            'line_distance': self.line_distance, 'length': self.length, 'S_wire': self.S_wire}
+        return self.stored_data
+
+    def remove(self):
+        self.stored_data.clear()
+
+
+
+
+
+class QT_transformer(Edge):
+    def __init__(self, scene, start_item, end_item, Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0, direction=0):
+        super().__init__(scene, start_item, end_item)
+        self.Sn = Sn
+        self.Pk = Pk
+        self.Uk = Uk
+        self.Po = Po
+        self.Io = Io
+        self.Uh = Uh
+        self.Ul = Ul
+        self.direction = direction  # case 1: Un = Uh; case 0: Un = Ul
+        self.Uh = Uh
+        self.Ul = Ul
+        self.stored_data = {}
+        self.pix = QPixmap("./QT_transformer.jpg")
+
+    def store_data(self):
+        self.stored_data = {'Sn': self.Sn, 'Pk': self.Pk, 'Uk': self.Uk, 'Po': self.Po, 'Io': self.Io, 'Uh': self.Uh,
+                            'Ul': self.Ul, 'Direction': self.direction}
+        return self.stored_data
+
+    def remove(self):
+        self.stored_data.clear()
+
+
+
 
