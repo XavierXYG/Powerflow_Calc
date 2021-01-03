@@ -7,4 +7,4 @@ Global_X = Matrix(1, num, Lambda((m, n), m + n))
 for i in range(num):
     Global_X[i] = sympy.Symbol('x'+str(i))
 
-initial_PQ_PV =  Matrix(1, num, Lambda((m, n), m + n))             # obtain from UI
+
