@@ -38,7 +38,7 @@ def PQ_ef_coefficient(admittance_matrix,  PQ_PV, BusNum):  # get the coefficient
                                              * Global_X[2*k]              #Q_pq coefficient
         PQ_bus[2*i] -= PQ_PV[i][0]       #P_pq coefficient - P(value from UI )
         PQ_bus[2*i+1] -= PQ_PV[i][1]     #Q_pq coefficient - Q(value from UI )
-    return PQ_bus
+    return PQ_bus                        #P1, Q1, P2, Q2... coefficient
 
 
 def PV_ef_coefficient(admittance_matrix,  PQ_PV, BusNum):  #get the coefficient of PV_bus
@@ -62,7 +62,7 @@ def PV_ef_coefficient(admittance_matrix,  PQ_PV, BusNum):  #get the coefficient 
         PV_bus[2*i +1] = Global_X[2*(i+size_PQ)]**2 + Global_X[2*(i+size_PQ)+1]**2    # V_pv coefficient
         PV_bus[2*i] -=PQ_PV[size_PQ+i][0]              #P_pv coefficient - P(value from UI )
         PV_bus[2*i+1] -=(PQ_PV[size_PQ+i][1])**2       #V_pv coefficient - V**2(value from UI )
-    return PV_bus
+    return PV_bus                                  #P1, V1, P2, V2... coefficient
 
 
 
@@ -76,7 +76,7 @@ def VA_ef_coefficient(PQ_PV, BusNum):    #get the coefficient of VA_bus
         f_VA = PQ_PV[size_PQ+size_PV+i][0] * math.sin(math.radians(PQ_PV[size_PQ+size_PV+i][1]))
         VA_bus[2*i] = e_VA
         VA_bus[2*i+1] = f_VA
-    return VA_bus
+    return VA_bus                           #e_VA1, f_VA1, e_VA2, e_VA2... coefficient
 
 '''
 if __name__ == "__main__":
