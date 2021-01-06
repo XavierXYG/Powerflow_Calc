@@ -8,12 +8,12 @@ from PyQt5.QtCore import QLine, QPointF
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
 from PyQt5.QtGui import QPixmap, QPainterPath
-import numpy
+from dialog import *
 
 
 
 
-class Edge:
+class Edge(Dialog):
     def __init__(self, scene, start_item, end_item):
         # 参数分别为场景、开始图元、结束图元
         super().__init__()
@@ -25,6 +25,8 @@ class Edge:
         self.gr_edge = GraphicEdge(self)
         # 此类一旦被初始化就在添加进scene
         self.scene.add_edge(self.gr_edge)
+
+        self.new_dialog = Dialog()
         self.window_show = 0
 
 
@@ -32,9 +34,18 @@ class Edge:
         if self.start_item is not None:
             self.update_positions()
 
+
+    def add_dialog(self, dialog):
+        self.dialog_dataflow.append(dialog)
+        dialog.show_dialog()
+
     # 最终保存进scene
     def store(self):
+        #add show_window_edge
         self.scene.add_edge(self.gr_edge)
+        self.window_show = 1
+        if self.window_show:
+            self.add_dialog(self.new_dialog)
         #add show_window_edge
 
 
@@ -125,6 +136,8 @@ class QT_wire(Edge):
         self.stored_data = stored_data
         self.pix = QPixmap("./QT_wire.jpg")
 
+
+
     def remove(self):
         self.stored_data.clear()
 
@@ -138,6 +151,21 @@ class QT_transformer(Edge):
         super().__init__()
         self.stored_data = stored_data
         self.pix = QPixmap("./QT_transformer.jpg")
+
+        self.new_transformer_dialog = Transformer_Dialog(self.new_dialog)
+
+    def add_dialog(self, transformer_dialog):
+        self.dialog_dataflow.append(transformer_dialog)
+        transformer_dialog.show_dialog()
+
+    # 最终保存进scene
+    def store(self):
+        self.scene.add_edge(self.gr_edge)
+        self.window_show = 1
+        if self.window_show:
+            self.add_dialog(self.new_transformer_dialog)
+        #add show_window_edge
+
 
     def remove(self):
         self.stored_data.clear()
