@@ -208,11 +208,15 @@ class GraphicView(QGraphicsView):
         self.drag_start_item = item
         self.drag_edge = Edge(self.gr_scene, self.drag_start_item, None)  # 开始拖拽线条，注意到拖拽终点为None
 
+
     def edge_drag_end(self, item):
         new_edge = Edge(self.gr_scene, self.drag_start_item, item)  # 拖拽结束
         self.drag_edge.remove()  # 删除拖拽时画的线
         self.drag_edge = None
-        new_edge.store()  # 保存最终产生的连接线
+        new_edge.store()# 保存最终产生的连接线
+
+
+
 
 
 class GraphicItem(QGraphicsPixmapItem):
