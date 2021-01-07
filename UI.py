@@ -1,9 +1,8 @@
 import math
 import sys
-from PyQt5.QtWidgets import QApplication, QGraphicsScene, QGraphicsView
+from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsScene, QGraphicsView, QAction
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtGui import QColor, QPen, QPainter
+from PyQt5.QtGui import QColor, QPen, QPainter, QIcon
 from PyQt5.QtCore import QLine, QPointF
 from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QTextEdit, QLineEdit
 
@@ -28,6 +27,126 @@ class MainWindow(QMainWindow):
         self.setMinimumWidth(1000)
         self.setCentralWidget(self.view)
         self.setWindowTitle("Graphics Demo")
+
+        self.initWindow()
+
+    def addFile(self):
+        pass
+
+    def openFile(self):
+        pass
+
+    def saveFile(self):
+        pass
+
+    def openGuide(self):
+        pass
+
+    def openAbout(self):
+        pass
+
+    def add_v_theta(self):
+        pass
+
+    def add_p_q(self):
+        pass
+
+    def add_p_v(self):
+        pass
+
+    def add_transformer(self):
+        pass
+
+    def add_line(self):
+        pass
+
+    def initWindow(self):
+        # ---- Menu Bar Actions ----
+        # add
+        add_file_action = QAction(QIcon('add.png'), 'Add New File...', self)
+        add_file_action.setShortcut('Ctrl+N')
+        add_file_action.setStatusTip('Add New File')
+        add_file_action.triggered.connect(self.addFile)
+        # open
+        open_file_action = QAction(QIcon('open.png'), 'Open Existing File...', self)
+        open_file_action.setShortcut('Ctrl+O')
+        open_file_action.setStatusTip('Open Existing File')
+        open_file_action.triggered.connect(self.openFile)
+        # save
+        save_file_action = QAction(QIcon('save.png'), 'Save File', self)
+        save_file_action.setShortcut('Ctrl+S')
+        save_file_action.setStatusTip('Save File')
+        save_file_action.triggered.connect(self.saveFile)
+        # exit
+        exit_file_action = QAction(QIcon('exit.png'), 'Exit', self)
+        exit_file_action.setShortcut('Ctrl+Q')
+        exit_file_action.setStatusTip('Exit Application')
+        exit_file_action.triggered.connect(self.close)
+        # guidance
+        guide_action = QAction(QIcon('guidance.png'), 'How to use', self)
+        guide_action.setShortcut('Ctrl+H')
+        guide_action.setStatusTip('User Guidance')
+        guide_action.triggered.connect(self.openGuide)
+        # about
+        about_action = QAction(QIcon('about.png'), 'About...', self)
+        about_action.setStatusTip('Development Information')
+        about_action.triggered.connect(self.openAbout)
+
+        # ---- Tool Bar Actions ----
+        # Add_V_theta_Bus
+        add_v_theta_action = QAction(QIcon('v_theta.png'), 'Add V-theta Bus', self)
+        add_v_theta_action.setStatusTip('Add V-theta Bus')
+        add_v_theta_action.triggered.connect(self.add_v_theta)
+        # Add_PV_Bus
+        add_p_v_action = QAction(QIcon('p_v.png'), 'Add P-V Bus', self)
+        add_p_v_action.setStatusTip('Add P-V Bus')
+        add_p_v_action.triggered.connect(self.add_p_v)
+        # Add_PQ_Bus
+        add_p_q_action = QAction(QIcon('p_q.png'), 'Add P-Q Bus', self)
+        add_p_q_action.setStatusTip('Add P-Q Bus')
+        add_p_q_action.triggered.connect(self.add_p_q)
+        # Add_Transformer
+        add_transformer_action = QAction(QIcon('transformer.png'), 'Add Transformer', self)
+        add_transformer_action.setStatusTip('Add Transformer')
+        add_transformer_action.triggered.connect(self.add_transformer)
+        # Add_Transmission_Line
+        add_line_action = QAction(QIcon('line.png'), 'Add Transmission Line', self)
+        add_line_action.setStatusTip('Add Transmission Line')
+        add_line_action.triggered.connect(self.add_line)
+
+        # ---- Bar Implementation ----
+        # status bar
+        status_bar = self.statusBar()
+
+        # menu bar
+        menu_bar = self.menuBar()
+        menu_bar.setNativeMenuBar(False)
+        file_menu = menu_bar.addMenu('File')
+        help_menu = menu_bar.addMenu('Help')
+
+        # add actions to menu bar
+        file_menu.addAction(add_file_action)
+        file_menu.addAction(open_file_action)
+        file_menu.addAction(save_file_action)
+        file_menu.addAction(exit_file_action)
+        help_menu.addAction(guide_action)
+        help_menu.addAction(about_action)
+
+        # tool bar
+        toolbar = self.addToolBar('Exit')
+        toolbar.addAction(add_v_theta_action)
+        toolbar.addAction(add_p_v_action)
+        toolbar.addAction(add_p_q_action)
+        toolbar.addAction(add_transformer_action)
+        toolbar.addAction(add_line_action)
+
+        # add actions to tool bar
+
+        # add message to status bar
+        status_bar.showMessage('Ready')
+
+        self.show()
+        pass
 
 
 class GraphicScene(QGraphicsScene):
