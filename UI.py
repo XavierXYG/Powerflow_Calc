@@ -47,6 +47,7 @@ class MainWindow(QMainWindow):
 
     def add_v_theta(self):
         self.view.selected_node_type = 'VTheta'
+        self.view.addNodeHandle()
 
     def add_p_q(self):
         self.view.selected_node_type = 'PQ'
@@ -59,6 +60,7 @@ class MainWindow(QMainWindow):
 
     def add_line(self):
         self.view.selected_edge_type = 'wire'
+        self.view.addEdgeHandle()
 
     def initWindow(self):
         # ---- Menu Bar Actions ----
@@ -172,9 +174,9 @@ class GraphicScene(QGraphicsScene):
         self.setSceneRect(0, 0, 500, 500)
 
         self.nodes = []  # 存储图元
-        self.dataflow_nodes = []
+        self.dataflow_nodes = []  # 存储节点数据
         self.edges = []  # 存储连线
-        self.dataflow_edges = []
+        self.dataflow_edges = []  # 存储连线数据
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -267,17 +269,27 @@ class GraphicView(QGraphicsView):
         # 设置拖拽模式
         self.setDragMode(self.RubberBandDrag)
 
+    # ---- Node & Edge Handlers ----
+    def addNodeHandle(self):
+        gr_item = GraphicItem()
+        gr_item.setPos(0, 0)
+        self.gr_scene.add_node(gr_item)
+
+    def addEdgeHandle(self):
+        self.edge_enable = ~self.edge_enable
+
     # override
     def keyPressEvent(self, event):
         # 当按下N键时，会在scene的（0,0）位置出现此图元
         if event.key() == Qt.Key_N:
-            gr_item = GraphicItem()
-            gr_item.setPos(0, 0)
-            self.gr_scene.add_node(gr_item)
+            self.addNodeHandle()
 
         # 当按下E键时，启动线条功能，再次按下则是关闭
         if event.key() == Qt.Key_E:
-            self.edge_enable = ~self.edge_enable
+            self.addEdgeHandle()
+
+        if event.key() == Qt.Key_Escape:
+            self.edge_enable = False
 
     # override
     def mousePressEvent(self, event):

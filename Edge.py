@@ -73,7 +73,7 @@ class Edge(Dialog):
         self.gr_edge = None
 
 
-class GraphicEdge(QGraphicsPathItem):
+class GraphicEdge(QGraphicsPathItem, QGraphicsPixmapItem):
     def __init__(self, edge_wrap, parent=None):
         super().__init__(parent)
         # 这个参数是GraphicEdge的包装类，见下文
