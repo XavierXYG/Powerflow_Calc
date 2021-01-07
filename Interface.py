@@ -1,27 +1,20 @@
 from sympy import Matrix, lambdify, exp
 import numpy as np
 from Global_X import Global_X
+from U_Coefficient import *
 import math
-# f[0] = x[0] * x[1] - x[2] * x[2] - 1.
-    # f[1] = x[0] * x[1] * x[2] + x[1] * x[1] - x[0] * x[0] - 2.
-    # f[2] = math.exp(x[0]) + x[2] - math.exp(x[1]) - 3.
-    #f[3]=x[0]*x[2]+x[5]-x[5]*x[4]
 
+admittance_matrix =  np.array([[1 + 2j, 2 + 3j, 1 + 1j],
+                     [3 + 0j, 4 + 5j, 5],
+                     [1 + 0j, 2 + 0j, 3 + 0j]])
+Global_Y = np.array([[10,20],[10,50000], [242000,0]])
+BusNum = [1, 1, 1]
 
-# A[0] = Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]-1
-# A[1] = Global_X[0]*Global_X[1]*Global_X[2]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]-2
-# A[2] = math.exp(Global_X[0])+Global_X[2]-math.exp(Global_X[1])-3
-# A[3] = Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]+Global_X[3]*Global_X[2]
-# A[4] = Global_X[0]*Global_X[1]*Global_X[2]+Global_X[5]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]+10
-# A[5] = Global_X[0]+Global_X[4]+math.exp(Global_X[0])+Global_X[2]-math.exp(Global_X[1])-8
 
 def Interface(input):  # 输入为三个表达式向量
-    PQ_bus = Matrix([[Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]-1,
-                Global_X[0]*Global_X[1]*Global_X[2]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]-2]])
-    PV_bus = Matrix([[exp(Global_X[0])+Global_X[2]-exp(Global_X[1])-3,
-                      Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]+Global_X[3]*Global_X[2]]])
-    VA_bus = Matrix([[Global_X[0]*Global_X[1]*Global_X[2]+Global_X[5]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]+10,
-                      Global_X[0]+Global_X[4]+exp(Global_X[0])+Global_X[2]-exp(Global_X[1])-8]])
+    PQ_bus = PQ_ef_coefficient(admittance_matrix,  Global_Y, BusNum)
+    PV_bus = PV_ef_coefficient(admittance_matrix,  Global_Y, BusNum)
+    VA_bus = VA_ef_coefficient(admittance_matrix, Global_Y, BusNum)
     num_PV = PV_bus.shape[1]
     num_PQ = PQ_bus.shape[1]
     num_VA = 1 * 2
