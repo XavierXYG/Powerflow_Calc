@@ -14,7 +14,7 @@ BusNum = [1, 1, 1]
 def Interface(input):  # 输入为三个表达式向量
     PQ_bus = PQ_ef_coefficient(admittance_matrix,  Global_Y, BusNum)
     PV_bus = PV_ef_coefficient(admittance_matrix,  Global_Y, BusNum)
-    VA_bus = VA_ef_coefficient(admittance_matrix, Global_Y, BusNum)
+    VA_bus = VA_ef_coefficient(Global_Y, BusNum)
     num_PV = PV_bus.shape[1]
     num_PQ = PQ_bus.shape[1]
     num_VA = 1 * 2
@@ -22,13 +22,10 @@ def Interface(input):  # 输入为三个表达式向量
     tuple_PV, tuple_PQ, tuple_VA = (), (), ()
     for i in range(num_total_bus):
         tuple_PQ = tuple_PQ + (Global_X[i],)  # 得到初始化的元组
-    #print(tuple_PQ)
     for j in range(num_total_bus):
         tuple_PV = tuple_PV + (Global_X[j],)  # 得到初始化的元组
-    #print(tuple_PV)
     for c in range(num_total_bus):
         tuple_VA = tuple_VA + (Global_X[c],)  # 得到初始化的元组
-    #print(tuple_VA)
 
     PV_trans = lambdify(tuple_PV, PV_bus, 'numpy')
     PQ_trans = lambdify(tuple_PQ, PQ_bus, 'numpy')
@@ -51,13 +48,6 @@ def Interface(input):  # 输入为三个表达式向量
     result_VA = VA_trans(*VA_input_tuple)
     result = np.r_[result_PQ[0], result_PV[0], result_VA[0]]
     return result
-
-
-def GetBusNum(PQ_bus, PV_bus, VA_bus):
-    num_PV = PV_bus.shape[1]
-    num_PQ = PQ_bus.shape[1]
-    num_VA = 1 * 2
-    return [num_PQ, num_PV, num_VA]
 
 
 '''

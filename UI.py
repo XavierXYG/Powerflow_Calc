@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QTextEdit, QLineEdit
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
 from PyQt5.QtGui import QPixmap, QPainterPath
 
-from Edge import Edge
+from Edge import *
 
 
 class MainWindow(QMainWindow):
@@ -46,19 +46,19 @@ class MainWindow(QMainWindow):
         pass
 
     def add_v_theta(self):
-        pass
+        self.view.selected_node_type = 'VTheta'
 
     def add_p_q(self):
-        pass
+        self.view.selected_node_type = 'PQ'
 
     def add_p_v(self):
-        pass
+        self.view.selected_node_type = 'PV'
 
     def add_transformer(self):
-        pass
+        self.view.selected_edge_type = 'transformer'
 
     def add_line(self):
-        pass
+        self.view.selected_edge_type = 'wire'
 
     def initWindow(self):
         # ---- Menu Bar Actions ----
@@ -172,7 +172,9 @@ class GraphicScene(QGraphicsScene):
         self.setSceneRect(0, 0, 500, 500)
 
         self.nodes = []  # 存储图元
+        self.dataflow_nodes = []
         self.edges = []  # 存储连线
+        self.dataflow_edges = []
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -243,8 +245,8 @@ class GraphicView(QGraphicsView):
         self.drag_edge = None  # 记录拖拽时的线
         self.selected_item_index = 0  # 记录当前被选中的图元的index
         self.selected_edge_index = 0  # 记录当前被选中的edge的index
-        self.node_type = ''  # 结点的类型
-        self.edge_type = ''  # edge的类型
+        self.selected_node_type = ''  # 结点的类型
+        self.selected_edge_type = ''  # edge的类型
 
         self.init_ui()
 
@@ -297,6 +299,9 @@ class GraphicView(QGraphicsView):
             print(self.selected_item_index)
             dialog = QWidget()
             dialog.show()
+        if isinstance(item, GraphicEdge):
+            self.selected_edge_index = item.getEdgeIndex()
+            print(self.selected_item_index)
 
     def mouseReleaseEvent(self, event):
         if self.edge_enable:
@@ -363,6 +368,7 @@ class GraphicItem(QGraphicsPixmapItem):
 
     def getNodeIndex(self):
         return self.scene().nodes.index(self)
+
 
 
 def demo_run():

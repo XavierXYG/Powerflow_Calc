@@ -11,8 +11,6 @@ from PyQt5.QtGui import QPixmap, QPainterPath
 from dialog import *
 
 
-
-
 class Edge(Dialog):
     def __init__(self, scene, start_item, end_item):
         # 参数分别为场景、开始图元、结束图元
@@ -128,6 +126,9 @@ class GraphicEdge(QGraphicsPathItem):
             # 这画的才是连接后的线
             painter.setPen(self._pen)
             painter.drawPath(path)
+
+    def getEdgeIndex(self):
+        return self.scene().edges.index(self)
 
 
 class QT_wire(Edge):
