@@ -311,8 +311,9 @@ class GraphicView(QGraphicsView):
             print(self.selected_item_index)
             dialog = QWidget()
             dialog.show()
-        if isinstance(item, GraphicEdge):
-            self.selected_edge_index = item.getEdgeIndex()
+        edge = self.get_edge_at_click(event)
+        if isinstance(edge, GraphicEdge):
+            self.selected_edge_index = edge.getEdgeIndex()
             print(self.selected_item_index)
 
     def mouseReleaseEvent(self, event):
@@ -345,10 +346,19 @@ class GraphicView(QGraphicsView):
         item = self.itemAt(pos)
         return item
 
-    def get_items_at_rubber_select(self):
+    def get_items_at_rubber_select(self, event):
         """ 返回一个所有选中图元的列表，对此操作即可 """
         area = self.rubberBandRect()
         return self.items(area)
+
+    def get_edge_at_click(self, event):
+        """ 获取点击位置的Edge，无则返回None. """
+        pos = event.pos()
+        for edge in self.gr_scene.edges:
+            bounding_rect = edge.boundingRect
+
+        edge = self.itemAt(pos)
+        return edge
 
     def edge_drag_start(self, item):
         self.drag_start_item = item
@@ -380,7 +390,6 @@ class GraphicItem(QGraphicsPixmapItem):
 
     def getNodeIndex(self):
         return self.scene().nodes.index(self)
-
 
 
 def demo_run():

@@ -27,11 +27,9 @@ class Edge(Dialog):
         self.new_dialog = Dialog()
         self.window_show = 0
 
-
         # 开始更新
         if self.start_item is not None:
             self.update_positions()
-
 
     def add_dialog(self, dialog):
         self.dialog_dataflow.append(dialog)
@@ -39,13 +37,12 @@ class Edge(Dialog):
 
     # 最终保存进scene
     def store(self):
-        #add show_window_edge
+        # add show_window_edge
         self.scene.add_edge(self.gr_edge)
         self.window_show = 1
         if self.window_show:
             self.add_dialog(self.new_dialog)
-        #add show_window_edge
-
+        # add show_window_edge
 
     # 更新位置
     def update_positions(self):
@@ -73,12 +70,12 @@ class Edge(Dialog):
         self.gr_edge = None
 
 
-class GraphicEdge(QGraphicsPathItem, QGraphicsPixmapItem):
+class GraphicEdge(QGraphicsPathItem):
     def __init__(self, edge_wrap, parent=None):
         super().__init__(parent)
         # 这个参数是GraphicEdge的包装类，见下文
         self.edge_wrap = edge_wrap
-        self.width = 3.0  # 线条的宽度
+        self.width = 10.0  # 线条的宽度
         self.pos_src = [0, 0]  # 线条起始位置 x，y坐标
         self.pos_dst = [0, 0]  # 线条结束位置
 
@@ -132,12 +129,10 @@ class GraphicEdge(QGraphicsPathItem, QGraphicsPixmapItem):
 
 
 class QT_wire(Edge):
-    def __init__(self, stored_data):    #sequence type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0
+    def __init__(self, stored_data):  # sequence type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0
         super().__init__()
         self.stored_data = stored_data
         self.pix = QPixmap("./QT_wire.jpg")
-
-
 
     def remove(self):
         self.stored_data.clear()
@@ -146,9 +141,8 @@ class QT_wire(Edge):
         pass
 
 
-
 class QT_transformer(Edge):
-    def __init__(self, stored_data):   # sequence Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0
+    def __init__(self, stored_data):  # sequence Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0
         super().__init__()
         self.stored_data = stored_data
         self.pix = QPixmap("./QT_transformer.jpg")
@@ -165,12 +159,11 @@ class QT_transformer(Edge):
         self.window_show = 1
         if self.window_show:
             self.add_dialog(self.new_transformer_dialog)
-        #add show_window_edge
-
+        # add show_window_edge
 
     def remove(self):
         self.stored_data.clear()
 
 
-
-
+if __name__ == '__main__':
+    GraphicEdge()
