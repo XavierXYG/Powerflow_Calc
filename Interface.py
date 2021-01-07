@@ -1,9 +1,27 @@
-from sympy import Matrix, lambdify
+from sympy import Matrix, lambdify, exp
 import numpy as np
 from Global_X import Global_X
+import math
+# f[0] = x[0] * x[1] - x[2] * x[2] - 1.
+    # f[1] = x[0] * x[1] * x[2] + x[1] * x[1] - x[0] * x[0] - 2.
+    # f[2] = math.exp(x[0]) + x[2] - math.exp(x[1]) - 3.
+    #f[3]=x[0]*x[2]+x[5]-x[5]*x[4]
 
 
-def Interface(PQ_bus, PV_bus, VA_bus):  # 输入为三个表达式向量
+# A[0] = Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]-1
+# A[1] = Global_X[0]*Global_X[1]*Global_X[2]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]-2
+# A[2] = math.exp(Global_X[0])+Global_X[2]-math.exp(Global_X[1])-3
+# A[3] = Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]+Global_X[3]*Global_X[2]
+# A[4] = Global_X[0]*Global_X[1]*Global_X[2]+Global_X[5]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]+10
+# A[5] = Global_X[0]+Global_X[4]+math.exp(Global_X[0])+Global_X[2]-math.exp(Global_X[1])-8
+
+def Interface(input):  # 输入为三个表达式向量
+    PQ_bus = Matrix([[Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]-1,
+                Global_X[0]*Global_X[1]*Global_X[2]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]-2]])
+    PV_bus = Matrix([[exp(Global_X[0])+Global_X[2]-exp(Global_X[1])-3,
+                      Global_X[0]*Global_X[1]-Global_X[2]*Global_X[2]+Global_X[3]*Global_X[2]]])
+    VA_bus = Matrix([[Global_X[0]*Global_X[1]*Global_X[2]+Global_X[5]+Global_X[1]*Global_X[1]-Global_X[0]*Global_X[0]+10,
+                      Global_X[0]+Global_X[4]+exp(Global_X[0])+Global_X[2]-exp(Global_X[1])-8]])
     num_PV = PV_bus.shape[1]
     num_PQ = PQ_bus.shape[1]
     num_VA = 1 * 2
@@ -11,21 +29,21 @@ def Interface(PQ_bus, PV_bus, VA_bus):  # 输入为三个表达式向量
     tuple_PV, tuple_PQ, tuple_VA = (), (), ()
     for i in range(num_total_bus):
         tuple_PQ = tuple_PQ + (Global_X[i],)  # 得到初始化的元组
-    print(tuple_PQ)
+    #print(tuple_PQ)
     for j in range(num_total_bus):
         tuple_PV = tuple_PV + (Global_X[j],)  # 得到初始化的元组
-    print(tuple_PV)
+    #print(tuple_PV)
     for c in range(num_total_bus):
         tuple_VA = tuple_VA + (Global_X[c],)  # 得到初始化的元组
-    print(tuple_VA)
+    #print(tuple_VA)
 
     PV_trans = lambdify(tuple_PV, PV_bus, 'numpy')
     PQ_trans = lambdify(tuple_PQ, PQ_bus, 'numpy')
     VA_trans = lambdify(tuple_VA, VA_bus, 'numpy')
 
-    initial_value_PV = np.random.rand(num_total_bus, 1)  # 变量向量赋值的接口
-    initial_value_PQ = np.random.rand(num_total_bus, 1)
-    initial_value_VA = np.random.rand(num_total_bus, 1)
+    initial_value_PV = input[:,np.newaxis]  # 变量向量赋值的接口
+    initial_value_PQ = input[:,np.newaxis]
+    initial_value_VA = input[:,np.newaxis]
 
     PV_input_tuple, PQ_input_tuple, VA_input_tuple = (), (), ()
     for c1 in range(num_total_bus):
