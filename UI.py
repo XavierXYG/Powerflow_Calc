@@ -123,6 +123,9 @@ class GraphicView(QGraphicsView):
         self.edge_enable = False  # 用来记录目前是否可以画线条
         self.drag_edge = None  # 记录拖拽时的线
         self.selected_item_index = 0  # 记录当前被选中的图元的index
+        self.selected_edge_index = 0  # 记录当前被选中的edge的index
+        self.node_type = ''  # 结点的类型
+        self.edge_type = ''  # edge的类型
 
         self.init_ui()
 
@@ -172,7 +175,7 @@ class GraphicView(QGraphicsView):
         item = self.get_item_at_click(event)
         if isinstance(item, GraphicItem):
             self.selected_item_index = item.getNodeIndex()
-            # print(self.selected_item_index)
+            print(self.selected_item_index)
             dialog = QWidget()
             dialog.show()
 
