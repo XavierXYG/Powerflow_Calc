@@ -60,7 +60,7 @@ def calculate_global_Y(*args):
 #def Newton_iteration(global_Y, F, accuracy):  # global_Y=F(X)，非线性方程
 #   pass
 
-def Newton(x, num, accuracy) #x是初始e、f给的值，需要初始化为1
+def Newton(x, num, accuracy): #x是初始e、f给的值，需要初始化为1
     pass
 
 def calculate_S():
