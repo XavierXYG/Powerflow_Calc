@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtGui import QColor, QPen, QPainter
 from PyQt5.QtCore import QLine, QPointF
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QTextEdit, QLineEdit
 
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
@@ -30,7 +31,6 @@ class MainWindow(QMainWindow):
 
 
 class GraphicScene(QGraphicsScene):
-
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -54,7 +54,6 @@ class GraphicScene(QGraphicsScene):
 
         self.nodes = []  # 存储图元
         self.edges = []  # 存储连线
-
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -123,6 +122,10 @@ class GraphicView(QGraphicsView):
 
         self.edge_enable = False  # 用来记录目前是否可以画线条
         self.drag_edge = None  # 记录拖拽时的线
+        self.selected_item_index = 0  # 记录当前被选中的图元的index
+        self.selected_edge_index = 0  # 记录当前被选中的edge的index
+        self.node_type = ''  # 结点的类型
+        self.edge_type = ''  # edge的类型
 
         self.init_ui()
 
@@ -158,7 +161,7 @@ class GraphicView(QGraphicsView):
     # override
     def mousePressEvent(self, event):
         item = self.get_item_at_click(event)
-        if event.button() == Qt.RightButton:   # 判断鼠标右键点击
+        if event.button() == Qt.RightButton:  # 判断鼠标右键点击
             if isinstance(item, GraphicItem):
                 self.gr_scene.remove_node(item)
         elif self.edge_enable:
@@ -167,6 +170,14 @@ class GraphicView(QGraphicsView):
         else:
             # 如果写到最开头，则线条拖拽功能会不起作用
             super().mousePressEvent(event)
+
+    def mouseDoubleClickEvent(self, event):
+        item = self.get_item_at_click(event)
+        if isinstance(item, GraphicItem):
+            self.selected_item_index = item.getNodeIndex()
+            print(self.selected_item_index)
+            dialog = QWidget()
+            dialog.show()
 
     def mouseReleaseEvent(self, event):
         if self.edge_enable:
@@ -191,7 +202,6 @@ class GraphicView(QGraphicsView):
             self.drag_edge.gr_edge.set_dst(sc_pos.x(), sc_pos.y())
             self.drag_edge.gr_edge.update()
         super().mouseMoveEvent(event)
-
 
     def get_item_at_click(self, event):
         """ 获取点击位置的图元，无则返回None. """
@@ -219,11 +229,11 @@ class GraphicItem(QGraphicsPixmapItem):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.pix = QPixmap("./icon.jpg")
-        self.width = 100    # 图元宽
-        self.height = 100   # 图元高
+        self.width = 100  # 图元宽
+        self.height = 100  # 图元高
         self.setPixmap(self.pix)  # 设置图元
         self.setFlag(QGraphicsItem.ItemIsSelectable)  # ***设置图元是可以被选择的
-        self.setFlag(QGraphicsItem.ItemIsMovable)     # ***设置图元是可以被移动的
+        self.setFlag(QGraphicsItem.ItemIsMovable)  # ***设置图元是可以被移动的
 
     def mouseMoveEvent(self, event):
         super().mouseMoveEvent(event)
@@ -232,7 +242,8 @@ class GraphicItem(QGraphicsPixmapItem):
             for gr_edge in self.scene().edges:
                 gr_edge.edge_wrap.update_positions()
 
-
+    def getNodeIndex(self):
+        return self.scene().nodes.index(self)
 
 
 def demo_run():

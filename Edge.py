@@ -8,10 +8,12 @@ from PyQt5.QtCore import QLine, QPointF
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
 from PyQt5.QtGui import QPixmap, QPainterPath
-import numpy
+from dialog import *
 
 
-class Edge:
+
+
+class Edge(Dialog):
     def __init__(self, scene, start_item, end_item):
         # 参数分别为场景、开始图元、结束图元
         super().__init__()
@@ -24,13 +26,28 @@ class Edge:
         # 此类一旦被初始化就在添加进scene
         self.scene.add_edge(self.gr_edge)
 
+        self.new_dialog = Dialog()
+        self.window_show = 0
+
+
         # 开始更新
         if self.start_item is not None:
             self.update_positions()
 
+
+    def add_dialog(self, dialog):
+        self.dialog_dataflow.append(dialog)
+        dialog.show_dialog()
+
     # 最终保存进scene
     def store(self):
+        #add show_window_edge
         self.scene.add_edge(self.gr_edge)
+        self.window_show = 1
+        if self.window_show:
+            self.add_dialog(self.new_dialog)
+        #add show_window_edge
+
 
     # 更新位置
     def update_positions(self):
@@ -114,49 +131,41 @@ class GraphicEdge(QGraphicsPathItem):
 
 
 class QT_wire(Edge):
-    def __init__(self, scene, start_item, end_item, type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0):
-        super().__init__(scene, start_item, end_item)
-        self.type = type
-        self.Dm = Dm
-        self.diameter = diameter
-        self.line_distance = line_distance
-        self.length = length
-        self.S_wire = S_wire
-        self.stored_data = {}
+    def __init__(self, stored_data):    #sequence type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0
+        super().__init__()
+        self.stored_data = stored_data
         self.pix = QPixmap("./QT_wire.jpg")
 
-    def store_data(self):
-        self.stored_data = {'type': self.type, 'Dm': self.Dm, 'diameter': self.diameter,
-                            'line_distance': self.line_distance, 'length': self.length, 'S_wire': self.S_wire}
-        return self.stored_data
+
 
     def remove(self):
         self.stored_data.clear()
 
-
+    def push_data(self):
+        pass
 
 
 
 class QT_transformer(Edge):
-    def __init__(self, scene, start_item, end_item, Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0, direction=0):
-        super().__init__(scene, start_item, end_item)
-        self.Sn = Sn
-        self.Pk = Pk
-        self.Uk = Uk
-        self.Po = Po
-        self.Io = Io
-        self.Uh = Uh
-        self.Ul = Ul
-        self.direction = direction  # case 1: Un = Uh; case 0: Un = Ul
-        self.Uh = Uh
-        self.Ul = Ul
-        self.stored_data = {}
+    def __init__(self, stored_data):   # sequence Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0
+        super().__init__()
+        self.stored_data = stored_data
         self.pix = QPixmap("./QT_transformer.jpg")
 
-    def store_data(self):
-        self.stored_data = {'Sn': self.Sn, 'Pk': self.Pk, 'Uk': self.Uk, 'Po': self.Po, 'Io': self.Io, 'Uh': self.Uh,
-                            'Ul': self.Ul, 'Direction': self.direction}
-        return self.stored_data
+        self.new_transformer_dialog = Transformer_Dialog(self.new_dialog)
+
+    def add_dialog(self, transformer_dialog):
+        self.dialog_dataflow.append(transformer_dialog)
+        transformer_dialog.show_dialog()
+
+    # 最终保存进scene
+    def store(self):
+        self.scene.add_edge(self.gr_edge)
+        self.window_show = 1
+        if self.window_show:
+            self.add_dialog(self.new_transformer_dialog)
+        #add show_window_edge
+
 
     def remove(self):
         self.stored_data.clear()
