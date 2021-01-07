@@ -5,7 +5,7 @@ Created on Fri Jan  1 21:03:21 2021
 @author: dell
 """
 
-from numpy as np
+import numpy as np
 from numpy import *
 from Interface import  Interface
 from Global_X import  num
