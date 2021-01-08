@@ -29,8 +29,7 @@ class Edge:
 
     # 最终保存进scene
     def store(self):
-        pass
-        # self.scene.add_edge(self.gr_edge)
+        self.scene.add_edge(self.gr_edge)
 
     # 更新位置
     def update_positions(self):

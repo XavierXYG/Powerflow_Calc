@@ -194,10 +194,12 @@ class GraphicScene(QGraphicsScene):
     def add_edge(self, edge):
         self.edges.append(edge)
         self.addItem(edge)
+        self.edges = sorted(set(self.edges), key=self.edges.index)  # 删除重复项
 
     def remove_edge(self, edge):
         self.edges.remove(edge)
         self.removeItem(edge)
+        self.edges = sorted(set(self.edges), key=self.edges.index)
 
     # override
     def drawBackground(self, painter, rect):
@@ -356,10 +358,12 @@ class GraphicView(QGraphicsView):
     def get_edge_at_click(self, event):
         """ 获取点击位置的Edge，无则返回None. """
         pos = [event.pos().x(), event.pos().y()]
+        print(pos)
         distance = []
         for edge in self.gr_scene.edges:
             distance_element = calculate_distance(edge.pos_src, edge.pos_dst, pos)
             distance.append(distance_element)
+            print(edge.pos_src, edge.pos_dst)
         min_value = min(distance)
         if min_value <= 250:
             result_edge = self.gr_scene.edges[distance.index(min_value)]
