@@ -17,8 +17,7 @@ def r_6(diameter, line_distance):
     return r
 
 
-def get_wire(type, Da, Db, Dc, diameter, line_distance, length, S_wire):
-    Dm=(Da*Db*Dc)**(1/3)
+def get_wire(type, Dm, diameter, line_distance, length, S_wire):
     if type == 1:       #type 1:cu + n=1
         rou = 18.8
         n = 1
@@ -186,7 +185,8 @@ def get_wire(type, Da, Db, Dc, diameter, line_distance, length, S_wire):
         return [yij, yi0, yj0]
 
 
-def Admittance_bus(size_n, type, Dm, diameter, line_distance, length, S_wire):
+def Admittance_bus(size_n, type, Da, Db, Dc, diameter, line_distance, length, S_wire):
+    Dm=(Da*Db*Dc)**(1/3)
     Topology = numpy.zeros((size_n,size_n), dtype=numpy.complex_)
    # Topology = numpy.zeros(size_n)   #size_n is number of bus
     for i in range(0, size_n):
