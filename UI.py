@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathIte
 from PyQt5.QtGui import QPixmap, QPainterPath
 
 from Edge import *
+from Calculate_Distance import calculate_distance
 
 
 class MainWindow(QMainWindow):
@@ -311,10 +312,11 @@ class GraphicView(QGraphicsView):
             print(self.selected_item_index)
             dialog = QWidget()
             dialog.show()
-        edge = self.get_edge_at_click(event)
-        if isinstance(edge, GraphicEdge):
-            self.selected_edge_index = edge.getEdgeIndex()
-            print(self.selected_item_index)
+        else:
+            edge = self.get_edge_at_click(event)
+            if isinstance(edge, GraphicEdge):
+                self.selected_edge_index = edge.getEdgeIndex()
+                print(self.selected_edge_index)
 
     def mouseReleaseEvent(self, event):
         if self.edge_enable:
@@ -353,12 +355,17 @@ class GraphicView(QGraphicsView):
 
     def get_edge_at_click(self, event):
         """ 获取点击位置的Edge，无则返回None. """
-        pos = event.pos()
+        pos = [event.pos().x(), event.pos().y()]
+        distance = []
         for edge in self.gr_scene.edges:
-            bounding_rect = edge.boundingRect
-
-        edge = self.itemAt(pos)
-        return edge
+            distance_element = calculate_distance(edge.pos_src, edge.pos_dst, pos)
+            distance.append(distance_element)
+        min_value = min(distance)
+        if min_value <= 250:
+            result_edge = self.gr_scene.edges[distance.index(min_value)]
+        else:
+            result_edge = None
+        return result_edge
 
     def edge_drag_start(self, item):
         self.drag_start_item = item
