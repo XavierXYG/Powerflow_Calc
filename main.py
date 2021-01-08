@@ -39,7 +39,7 @@ class BUS_Vtheta:
         pass
 
 #type 1:cu+n=1+S=300mm2
-def get_wire(type, Dm, diameter, line_distance, length, S_wire):#(材料，股数)，Dm，导线直径，分裂线距离，导线长度, 导体横截面积
+def get_wire(type, Da, Db, Dc, diameter, line_distance, length, S_wire):#(材料，股数)，Dm，导线直径，分裂线距离，导线长度, 导体横截面积
     pass
 
 def get_transformer(Un,Sn,Pk,Uk,Io,Po,ratio):#Un,Sn,Pk,Uk%,Io%,Po,ratio
