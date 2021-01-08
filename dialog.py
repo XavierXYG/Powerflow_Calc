@@ -8,8 +8,9 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtGui import QColor, QPen, QPainter
 from PyQt5.QtCore import QLine, QPointF, QObject, pyqtSignal, pyqtSlot
 from PyQt5 import QtCore
-from PyQt5.QtGui import QFont, QPalette, QIcon
+from PyQt5.QtGui import QFont, QPalette, QIcon, QPixmap
 from PyQt5 import QtGui
+import qtawesome as qta
 
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
@@ -30,7 +31,6 @@ class Dialog(QWidget):
         self.pe = QPalette()
         self.setAutoFillBackground(True)
         self.pe.setColor(self.backgroundRole(), QColor(3, 35, 14))  # 设置背景色
-        # self.pe.setBrush(QPalette.Background,Qt.darkCyan)
         self.setPalette(self.pe)
 
         self.pushbutton_close = QPushButton(self)
@@ -66,10 +66,26 @@ class Dialog(QWidget):
         self.label_style = '''QLabel{color:white;font-size:20px;font-family:JetBrains Mono;font-weight:bold;}'''
 
         # 设置子类文本框背景色和字体
-        bgColor = '#f4f3de'  #文本框背景色
-        self.text_style = """QLineEdit{{ color: #4C4C4C; border: 0px solid black; background-color: {0}; color: #000000 }} 
-            QLineEdit:hover{{ border: 2px solid #000000;}}""".format(
+        bgColor = '#d7d7d7'  #文本框背景色
+        self.text_style = """QLineEdit{{ color: #4C4C4C; border-width: 1px solid black;border-radius:10px;
+            padding:2px 4px; background-color: {0}; color: #000000; 
+                font_family:JetBrains Mono;font-weight:bold; }} 
+            QLineEdit:hover{{ border: 5px solid #d7d7d7;}}""".format(
             bgColor)
+
+        self.select_text_style = """QComboBox{{ color: #4C4C4C; border: 1px solid black;border-radius:10px;
+                   padding:2px 4px; background-color: {0}; color: #000000; 
+                       font_family:JetBrains Mono;font-weight:bold; }} 
+                   QComboBox:hover{{ border: 0px solid #d7d7d7;}}""".format(
+            bgColor)
+        self.select_text_style = '''QComboBox{{ color: #4C4C4C; border: 1px solid black;border-radius:10px;
+                   padding:2px 4px; background-color: {0}; color: #000000; 
+                       font_family:JetBrains Mono;font-weight:bold; }} 
+                   QComboBox:hover{{ border: 0px solid #d7d7d7;}}'''.format(
+            bgColor)
+        #setStyleSheet("QComboBox QAbstractItemView {border:1px solid #dddddd;outline:0px;height:30px;	} QComboBox QAbstractItemView::item {min-height: 30px;background-color: rgb(255, 255, 255);color:#333;padding-left:11px;outline:0px;} QComboBox QAbstractItemView::item:hover {color:#333;background-color: #e9f2ff;}"
+
+
 
     def center(self):
         # 获得窗口
@@ -120,16 +136,20 @@ class PQ_Dialog(Dialog):
         self.P_label = QPushButton(self)
         self.P_label.move(100, 100)
         self.P_label.setText('P(w)')
+        self.P_label.setStyleSheet(self.label_style)
         self.P_data = QLineEdit(self)
         self.P_data.move(200, 100)
         self.P_data.setPlaceholderText("请输入P(w)")
+        self.P_data.setStyleSheet(self.text_style)
 
         self.Q_label = QLabel(self)
         self.Q_label.move(100, 160)
         self.Q_label.setText('Q(var)')
+        self.Q_label.setStyleSheet(self.label_style)
         self.Q_data = QLineEdit(self)
         self.Q_data.move(200, 160)
         self.Q_data.setPlaceholderText("请输入Q(var)")
+        self.Q_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
         self.show()
@@ -154,16 +174,20 @@ class PV_Dialog(Dialog):
         self.P_label = QLabel(self)
         self.P_label.move(100, 100)
         self.P_label.setText('P(w)')
+        self.P_label.setStyleSheet(self.label_style)
         self.P_data = QLineEdit(self)
         self.P_data.move(200, 100)
         self.P_data.setPlaceholderText("请输入P(w)")
+        self.P_data.setStyleSheet(self.text_style)
 
         self.V_label = QLabel(self)
         self.V_label.move(100, 160)
         self.V_label.setText('V(v)')
+        self.V_label.setStyleSheet(self.label_style)
         self.V_data = QLineEdit(self)
         self.V_data.move(200, 160)
         self.V_data.setPlaceholderText("请输入V(v)")
+        self.V_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
         self.show()
@@ -188,16 +212,20 @@ class VA_Dialog(Dialog):
         self.V_label = QLabel(self)
         self.V_label.move(100, 100)
         self.V_label.setText('V(v)')
+        self.V_label.setStyleSheet(self.label_style)
         self.V_data = QLineEdit(self)
         self.V_data.move(200, 100)
         self.V_data.setPlaceholderText("请输入V(v)")
+        self.V_data.setStyleSheet(self.text_style)
 
-        self.V_label = QLabel(self)
-        self.V_label.move(100, 160)
-        self.V_label.setText('V的辐角(度)')
-        self.V_data = QLineEdit(self)
-        self.V_data.move(200, 160)
-        self.V_data.setPlaceholderText("请输入V的辐角（度）")
+        self.A_label = QLabel(self)
+        self.A_label.move(100, 160)
+        self.A_label.setText('V的辐角(度)')
+        self.A_label.setStyleSheet(self.label_style)
+        self.A_data = QLineEdit(self)
+        self.A_data.move(200, 160)
+        self.A_data.setPlaceholderText("请输入V的辐角（度）")
+        self.A_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
         self.show()
@@ -211,58 +239,88 @@ class Wire_Dialog(Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle('Set Wire Parameters')
-        self.resize(650, 550)
+        self.resize(650, 650)
         self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
 
-        self.wire_text = [[]] ** 6  # type, Dm, diameter, line_distance, length, S_wire
+        self.wire_text = [[]] * 6  # type, Dm, diameter, line_distance, length, S_wire
 
-        self.set_button.move(450, 500)
-        self.cancel_button.move(550, 500)
+        self.set_button.move(450, 600)
+        self.cancel_button.move(550, 600)
 
         self.type_label = QLabel(self)
         self.type_label.move(100, 100)
         self.type_label.setText('Type')
+        self.type_label.setStyleSheet(self.label_style)
         self.type_select = QComboBox(self)
         self.type_select.move(300, 100)
+        self.type_select.setStyleSheet(self.select_text_style)
         self.type_select.addItems(['type 1 :铜导线，分裂线股数为1', 'type 2 :铜导线，分裂线股数为4',
                                    'type 3 :铜导线，分裂线股数为6', 'type 4 :钢导线，分裂线股数为1',
                                    'type 5 :钢导线，分裂线股数为4', 'type 6 :钢导线，分裂线股数为6'])
         self.selected_type_index = 0
 
-        self.Dm_label = QLabel(self)
-        self.Dm_label.move(100, 160)
-        self.Dm_label.setText('Dm(mm)')
-        self.Dm_data = QLineEdit(self)
-        self.Dm_data.move(300, 160)
-        self.Dm_data.setPlaceholderText("请输入Dm(mm)")
+        self.D1_label = QLabel(self)
+        self.D1_label.move(100, 160)
+        self.D1_label.setText('D1(mm)')
+        self.D1_label.setStyleSheet(self.label_style)
+        self.D1_data = QLineEdit(self)
+        self.D1_data.move(300, 160)
+        self.D1_data.setPlaceholderText("请输入D1(mm)")
+        self.D1_data.setStyleSheet(self.text_style)
+
+        self.D2_label = QLabel(self)
+        self.D2_label.move(100, 220)
+        self.D2_label.setText('D2(mm)')
+        self.D2_label.setStyleSheet(self.label_style)
+        self.D2_data = QLineEdit(self)
+        self.D2_data.move(300, 220)
+        self.D2_data.setPlaceholderText("请输入D2(mm)")
+        self.D2_data.setStyleSheet(self.text_style)
+
+        self.D3_label = QLabel(self)
+        self.D3_label.move(100, 280)
+        self.D3_label.setText('D3(mm)')
+        self.D3_label.setStyleSheet(self.label_style)
+        self.D3_data = QLineEdit(self)
+        self.D3_data.move(300, 280)
+        self.D3_data.setPlaceholderText("请输入D3(mm)")
+        self.D3_data.setStyleSheet(self.text_style)
 
         self.diameter_label = QLabel(self)
-        self.diameter_label.move(100, 220)
+        self.diameter_label.move(100, 340)
         self.diameter_label.setText('传输线外直径(mm)')
+        self.diameter_label.setStyleSheet(self.label_style)
         self.diameter_data = QLineEdit(self)
-        self.diameter_data.move(300, 220)
-        self.diameter_data.setPlaceholderText("请输入传输线外直径")
+        self.diameter_data.move(300, 340)
+        self.diameter_data.setPlaceholderText("请输入传输线直径")
+        self.diameter_data.setStyleSheet(self.text_style)
 
         self.line_distance_label = QLabel(self)
-        self.line_distance_label.move(100, 280)
+        self.line_distance_label.move(100, 400)
         self.line_distance_label.setText('分裂线距离(mm)')
+        self.line_distance_label.setStyleSheet(self.label_style)
         self.line_distance_data = QLineEdit(self)
-        self.line_distance_data.move(300, 280)
+        self.line_distance_data.move(300, 400)
         self.line_distance_data.setPlaceholderText("请输入分裂线距离")
+        self.line_distance_data.setStyleSheet(self.text_style)
 
         self.length_label = QLabel(self)
-        self.length_label.move(100, 340)
+        self.length_label.move(100, 460)
         self.length_label.setText('传输线长度(km)')
+        self.length_label.setStyleSheet(self.label_style)
         self.length_data = QLineEdit(self)
-        self.length_data.move(300, 340)
+        self.length_data.move(300, 460)
         self.length_data.setPlaceholderText("请输入传输线长度")
+        self.length_data.setStyleSheet(self.text_style)
 
         self.S_wire_label = QLabel(self)
-        self.S_wire_label.move(100, 400)
+        self.S_wire_label.move(100, 520)
         self.S_wire_label.setText('传输线导通截面积')
+        self.S_wire_label.setStyleSheet(self.label_style)
         self.S_wire_data = QLineEdit(self)
-        self.S_wire_data.move(300, 400)
-        self.S_wire_data.setPlaceholderText("请输入传输线截面积")
+        self.S_wire_data.move(300, 520)
+        self.S_wire_data.setPlaceholderText("请输入截面积")
+        self.S_wire_data.setStyleSheet(self.text_style)
 
         self.wire_text = []
         self.set_button.clicked.connect(lambda: self.save_text())
@@ -298,9 +356,6 @@ class Transformer_Dialog(Dialog):
         self.Sn_data.move(200, 100)
         self.Sn_data.setPlaceholderText("请输入Sn(MVA)")
         self.Sn_data.setStyleSheet(self.text_style)
-        # self.Sn_data.setStyleSheet("background-color:red")   # 背景色
-        # #设置字体和大小
-        # self.Sn_data.setFont(QFont("Timers", 28, QFont:Bold) )
 
         self.Pk_label = QLabel(self)
         self.Pk_label.move(100, 160)
@@ -368,7 +423,7 @@ class Transformer_Dialog(Dialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = Transformer_Dialog()
+    win = Wire_Dialog()
     win.show()
-    print(win.tf_text)
+    #print(win.tf_text)
     sys.exit(app.exec_())
