@@ -11,12 +11,18 @@ from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathIte
 from PyQt5.QtGui import QPixmap, QPainterPath
 
 from Edge import *
+from Node import *
 from Calculate_Distance import calculate_distance
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.status_bar = self.statusBar()
+        self.menu_bar = self.menuBar()
+        self.toolbar = self.addToolBar('Tools')
+
+        self.initWindow()
         self.scene = GraphicScene(self)
         self.view = GraphicView(self.scene, self)
         # 有view就要有scene
@@ -29,126 +35,126 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.view)
         self.setWindowTitle("Graphics Demo")
 
-        # self.initWindow()
 
-    # def addFile(self):
-    #     pass
-    #
-    # def openFile(self):
-    #     pass
-    #
-    # def saveFile(self):
-    #     pass
-    #
-    # def openGuide(self):
-    #     pass
-    #
-    # def openAbout(self):
-    #     pass
-    #
-    # def add_v_theta(self):
-    #     self.view.selected_node_type = 'VTheta'
-    #     self.view.addNodeHandle()
-    #
-    # def add_p_q(self):
-    #     self.view.selected_node_type = 'PQ'
-    #
-    # def add_p_v(self):
-    #     self.view.selected_node_type = 'PV'
-    #
-    # def add_transformer(self):
-    #     self.view.selected_edge_type = 'transformer'
-    #
-    # def add_line(self):
-    #     self.view.selected_edge_type = 'wire'
-    #     self.view.addEdgeHandle()
-    #
-    # def initWindow(self):
-    #     # ---- Menu Bar Actions ----
-    #     # add
-    #     add_file_action = QAction(QIcon('add.png'), 'Add New File...', self)
-    #     add_file_action.setShortcut('Ctrl+N')
-    #     add_file_action.setStatusTip('Add New File')
-    #     add_file_action.triggered.connect(self.addFile)
-    #     # open
-    #     open_file_action = QAction(QIcon('open.png'), 'Open Existing File...', self)
-    #     open_file_action.setShortcut('Ctrl+O')
-    #     open_file_action.setStatusTip('Open Existing File')
-    #     open_file_action.triggered.connect(self.openFile)
-    #     # save
-    #     save_file_action = QAction(QIcon('save.png'), 'Save File', self)
-    #     save_file_action.setShortcut('Ctrl+S')
-    #     save_file_action.setStatusTip('Save File')
-    #     save_file_action.triggered.connect(self.saveFile)
-    #     # exit
-    #     exit_file_action = QAction(QIcon('exit.png'), 'Exit', self)
-    #     exit_file_action.setShortcut('Ctrl+Q')
-    #     exit_file_action.setStatusTip('Exit Application')
-    #     exit_file_action.triggered.connect(self.close)
-    #     # guidance
-    #     guide_action = QAction(QIcon('guidance.png'), 'How to use', self)
-    #     guide_action.setShortcut('Ctrl+H')
-    #     guide_action.setStatusTip('User Guidance')
-    #     guide_action.triggered.connect(self.openGuide)
-    #     # about
-    #     about_action = QAction(QIcon('about.png'), 'About...', self)
-    #     about_action.setStatusTip('Development Information')
-    #     about_action.triggered.connect(self.openAbout)
-    #
-    #     # ---- Tool Bar Actions ----
-    #     # Add_V_theta_Bus
-    #     add_v_theta_action = QAction(QIcon('v_theta.png'), 'Add V-theta Bus', self)
-    #     add_v_theta_action.setStatusTip('Add V-theta Bus')
-    #     add_v_theta_action.triggered.connect(self.add_v_theta)
-    #     # Add_PV_Bus
-    #     add_p_v_action = QAction(QIcon('p_v.png'), 'Add P-V Bus', self)
-    #     add_p_v_action.setStatusTip('Add P-V Bus')
-    #     add_p_v_action.triggered.connect(self.add_p_v)
-    #     # Add_PQ_Bus
-    #     add_p_q_action = QAction(QIcon('p_q.png'), 'Add P-Q Bus', self)
-    #     add_p_q_action.setStatusTip('Add P-Q Bus')
-    #     add_p_q_action.triggered.connect(self.add_p_q)
-    #     # Add_Transformer
-    #     add_transformer_action = QAction(QIcon('transformer.png'), 'Add Transformer', self)
-    #     add_transformer_action.setStatusTip('Add Transformer')
-    #     add_transformer_action.triggered.connect(self.add_transformer)
-    #     # Add_Transmission_Line
-    #     add_line_action = QAction(QIcon('line.png'), 'Add Transmission Line', self)
-    #     add_line_action.setStatusTip('Add Transmission Line')
-    #     add_line_action.triggered.connect(self.add_line)
-    #
-    #     # ---- Bar Implementation ----
-    #     # status bar
-    #     status_bar = self.statusBar()
-    #
-    #     # menu bar
-    #     menu_bar = self.menuBar()
-    #     menu_bar.setNativeMenuBar(False)
-    #     file_menu = menu_bar.addMenu('File')
-    #     help_menu = menu_bar.addMenu('Help')
-    #
-    #     # add actions to menu bar
-    #     file_menu.addAction(add_file_action)
-    #     file_menu.addAction(open_file_action)
-    #     file_menu.addAction(save_file_action)
-    #     file_menu.addAction(exit_file_action)
-    #     help_menu.addAction(guide_action)
-    #     help_menu.addAction(about_action)
-    #
-    #     # tool bar
-    #     toolbar = self.addToolBar('Exit')
-    #     toolbar.addAction(add_v_theta_action)
-    #     toolbar.addAction(add_p_v_action)
-    #     toolbar.addAction(add_p_q_action)
-    #     toolbar.addAction(add_transformer_action)
-    #     toolbar.addAction(add_line_action)
-    #
-    #     # add actions to tool bar
-    #
-    #     # add message to status bar
-    #     status_bar.showMessage('Ready')
-    #
-    #     self.show()
+
+    def addFile(self):
+        pass
+
+    def openFile(self):
+        pass
+
+    def saveFile(self):
+        pass
+
+    def openGuide(self):
+        pass
+
+    def openAbout(self):
+        pass
+
+    def add_v_theta(self):
+        self.view.selected_node_type = 'VTheta'
+        self.view.addNodeHandle('VTheta')
+
+    def add_p_q(self):
+        self.view.selected_node_type = 'PQ'
+
+    def add_p_v(self):
+        self.view.selected_node_type = 'PV'
+
+    def add_transformer(self):
+        self.view.selected_edge_type = 'transformer'
+
+    def add_line(self):
+        self.view.selected_edge_type = 'wire'
+        self.view.addEdgeHandle()
+
+    def initWindow(self):
+        # ---- Menu Bar Actions ----
+        # add
+        add_file_action = QAction(QIcon('add.png'), 'Add New File...', self)
+        add_file_action.setShortcut('Ctrl+N')
+        add_file_action.setStatusTip('Add New File')
+        add_file_action.triggered.connect(self.addFile)
+        # open
+        open_file_action = QAction(QIcon('open.png'), 'Open Existing File...', self)
+        open_file_action.setShortcut('Ctrl+O')
+        open_file_action.setStatusTip('Open Existing File')
+        open_file_action.triggered.connect(self.openFile)
+        # save
+        save_file_action = QAction(QIcon('save.png'), 'Save File', self)
+        save_file_action.setShortcut('Ctrl+S')
+        save_file_action.setStatusTip('Save File')
+        save_file_action.triggered.connect(self.saveFile)
+        # exit
+        exit_file_action = QAction(QIcon('exit.png'), 'Exit', self)
+        exit_file_action.setShortcut('Ctrl+Q')
+        exit_file_action.setStatusTip('Exit Application')
+        exit_file_action.triggered.connect(self.close)
+        # guidance
+        guide_action = QAction(QIcon('guidance.png'), 'How to use', self)
+        guide_action.setShortcut('Ctrl+H')
+        guide_action.setStatusTip('User Guidance')
+        guide_action.triggered.connect(self.openGuide)
+        # about
+        about_action = QAction(QIcon('about.png'), 'About...', self)
+        about_action.setStatusTip('Development Information')
+        about_action.triggered.connect(self.openAbout)
+
+        # ---- Tool Bar Actions ----
+        # Add_V_theta_Bus
+        add_v_theta_action = QAction(QIcon('./images/v_theta.png'), 'Add V-theta Bus', self)
+        add_v_theta_action.setStatusTip('Add V-theta Bus')
+        add_v_theta_action.triggered.connect(self.add_v_theta)
+        # Add_PV_Bus
+        add_p_v_action = QAction(QIcon('./images/p_v.png'), 'Add P-V Bus', self)
+        add_p_v_action.setStatusTip('Add P-V Bus')
+        add_p_v_action.triggered.connect(self.add_p_v)
+        # Add_PQ_Bus
+        add_p_q_action = QAction(QIcon('./images/p_q.png'), 'Add P-Q Bus', self)
+        add_p_q_action.setStatusTip('Add P-Q Bus')
+        add_p_q_action.triggered.connect(self.add_p_q)
+        # Add_Transformer
+        add_transformer_action = QAction(QIcon('./images/transformer.png'), 'Add Transformer', self)
+        add_transformer_action.setStatusTip('Add Transformer')
+        add_transformer_action.triggered.connect(self.add_transformer)
+        # Add_Transmission_Line
+        add_line_action = QAction(QIcon('./images/line.png'), 'Add Transmission Line', self)
+        add_line_action.setStatusTip('Add Transmission Line')
+        add_line_action.triggered.connect(self.add_line)
+
+        # ---- Bar Implementation ----
+        # status bar
+        # self.status_bar = self.statusBar()
+
+        # menu bar
+        # self.menu_bar = self.menuBar()
+        self.menu_bar.setNativeMenuBar(False)
+        file_menu = self.menu_bar.addMenu('File')
+        help_menu = self.menu_bar.addMenu('Help')
+
+        # add actions to menu bar
+        file_menu.addAction(add_file_action)
+        file_menu.addAction(open_file_action)
+        file_menu.addAction(save_file_action)
+        file_menu.addAction(exit_file_action)
+        help_menu.addAction(guide_action)
+        help_menu.addAction(about_action)
+
+        # tool bar
+        # self.toolbar = self.addToolBar('Tools')
+
+        # add actions to tool bar
+        self.toolbar.addAction(add_v_theta_action)
+        self.toolbar.addAction(add_p_v_action)
+        self.toolbar.addAction(add_p_q_action)
+        self.toolbar.addAction(add_transformer_action)
+        self.toolbar.addAction(add_line_action)
+
+        # add message to status bar
+        self.status_bar.showMessage('Ready')
+
+        self.show()
 
 
 class GraphicScene(QGraphicsScene):
@@ -173,22 +179,22 @@ class GraphicScene(QGraphicsScene):
         self.setBackgroundBrush(self._color_background)
         self.setSceneRect(0, 0, 1000, 1000)
 
-        self.nodes = []  # 存储图元
-        self.dataflow_nodes = []  # 存储节点数据
+        self.nodes = []  # 存储节点
+        # self.dataflow_nodes = []  # 存储节点数据
         self.edges = []  # 存储连线
-        self.dataflow_edges = []  # 存储连线数据
+        # self.dataflow_edges = []  # 存储连线数据
 
     def add_node(self, node):
         self.nodes.append(node)
-        self.addItem(node)
+        self.addItem(node.gr_node)
 
     def remove_node(self, node):
         self.nodes.remove(node)
         # 删除图元时，遍历与其连接的线，并移除
         for edge in self.edges:
-            if edge.edge_wrap.start_item is node or edge.edge_wrap.end_item is node:
+            if edge.edge_wrap.start_item is node.gr_node or edge.edge_wrap.end_item is node.gr_node:
                 self.remove_edge(edge)
-        self.removeItem(node)
+        self.removeItem(node.gr_node)
 
     def add_edge(self, edge):
         self.edges.append(edge)
@@ -272,10 +278,13 @@ class GraphicView(QGraphicsView):
         self.setDragMode(self.RubberBandDrag)
 
     # ---- Node & Edge Handlers ----
-    def addNodeHandle(self):
-        gr_item = GraphicItem()
-        gr_item.setPos(500, 500)
-        self.gr_scene.add_node(gr_item)
+    def addNodeHandle(self, nd_type):
+        # gr_item = GraphicItem(nd_type)
+        # gr_item.setPos(500, 500)
+        # self.gr_scene.add_node(gr_item)
+        new_node = Node(self.scene, nd_type)
+        # new_node.gr_node.setPos(500, 500)
+        self.gr_scene.add_node(new_node)
 
     def addEdgeHandle(self):
         self.edge_enable = ~self.edge_enable
@@ -284,7 +293,7 @@ class GraphicView(QGraphicsView):
     def keyPressEvent(self, event):
         # 当按下N键时，会在scene的（0,0）位置出现此图元
         if event.key() == Qt.Key_N:
-            self.addNodeHandle()
+            self.addNodeHandle('VTheta')
 
         # 当按下E键时，启动线条功能，再次按下则是关闭
         if event.key() == Qt.Key_E:
@@ -356,16 +365,19 @@ class GraphicView(QGraphicsView):
 
     def get_edge_at_click(self, event):
         """ 获取点击位置的Edge，无则返回None. """
-        pos = [event.pos().x(), event.pos().y()]
-        # print(pos)
+        sc_pos = self.mapToScene(event.pos())
+        pos = [sc_pos.x(), sc_pos.y()]
         distance = []
         for edge in self.gr_scene.edges:
             distance_element = calculate_distance(edge.pos_src, edge.pos_dst, pos)
             distance.append(distance_element)
             # print(edge.pos_src, edge.pos_dst)
-        min_value = min(distance)
-        if min_value <= 10:
-            result_edge = self.gr_scene.edges[distance.index(min_value)]
+        if len(distance):
+            min_value = min(distance)
+            if min_value <= 10:
+                result_edge = self.gr_scene.edges[distance.index(min_value)]
+            else:
+                result_edge = None
         else:
             result_edge = None
         return result_edge
@@ -389,25 +401,25 @@ class GraphicView(QGraphicsView):
         new_edge.store()  # 保存最终产生的连接线
 
 
-class GraphicItem(QGraphicsPixmapItem):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.pix = QPixmap("./images/icon.jpg")
-        self.width = 100  # 图元宽
-        self.height = 100  # 图元高
-        self.setPixmap(self.pix)  # 设置图元
-        self.setFlag(QGraphicsItem.ItemIsSelectable)  # ***设置图元是可以被选择的
-        self.setFlag(QGraphicsItem.ItemIsMovable)  # ***设置图元是可以被移动的
-
-    def mouseMoveEvent(self, event):
-        super().mouseMoveEvent(event)
-        # 如果图元被选中，就更新连线，这里更新的是所有。可以优化，只更新连接在图元上的。
-        if self.isSelected():
-            for gr_edge in self.scene().edges:
-                gr_edge.edge_wrap.update_positions()
-
-    def getNodeIndex(self):
-        return self.scene().nodes.index(self)
+# class GraphicItem(QGraphicsPixmapItem):
+#     def __init__(self, parent=None):
+#         super().__init__(parent)
+#         self.pix = QPixmap("./images/icon.jpg")
+#         self.width = 100  # 图元宽
+#         self.height = 100  # 图元高
+#         self.setPixmap(self.pix)  # 设置图元
+#         self.setFlag(QGraphicsItem.ItemIsSelectable)  # ***设置图元是可以被选择的
+#         self.setFlag(QGraphicsItem.ItemIsMovable)  # ***设置图元是可以被移动的
+#
+#     def mouseMoveEvent(self, event):
+#         super().mouseMoveEvent(event)
+#         # 如果图元被选中，就更新连线，这里更新的是所有。可以优化，只更新连接在图元上的。
+#         if self.isSelected():
+#             for gr_edge in self.scene().edges:
+#                 gr_edge.edge_wrap.update_positions()
+#
+#     def getNodeIndex(self):
+#         return self.scene().nodes.index(self)
 
 
 def demo_run():

@@ -8,20 +8,29 @@ from PyQt5.QtCore import QLine, QPointF
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
 from PyQt5.QtGui import QPixmap, QPainterPath
+from Dialog import *
 
 
 class Edge:
-    def __init__(self, scene, start_item, end_item):
+    def __init__(self, scene, eg_type, start_item, end_item):
         # 参数分别为场景、开始图元、结束图元
         super().__init__()
         self.scene = scene
+        self.type = eg_type
         self.start_item = start_item
         self.end_item = end_item
 
         # 线条图形在此处创建
-        self.gr_edge = GraphicEdge(self)
+        self.gr_edge = GraphicEdge(self, eg_type)
         # 此类一旦被初始化就在添加进scene
         self.scene.add_edge(self.gr_edge)
+
+        if eg_type == "TF":
+            self.data_dialog = Transformer_Dialog()
+        elif eg_type == "TL":
+            self.data_dialog = Wire_Dialog()
+        else:
+            pass
 
         # 开始更新
         if self.start_item is not None:
@@ -30,6 +39,7 @@ class Edge:
     # 最终保存进scene
     def store(self):
         self.scene.add_edge(self.gr_edge)
+        self.data_dialog.show_dialog()
 
     # 更新位置
     def update_positions(self):
@@ -58,8 +68,9 @@ class Edge:
 
 
 class GraphicEdge(QGraphicsPathItem):
-    def __init__(self, edge_wrap, parent=None):
+    def __init__(self, eg_type, edge_wrap, parent=None):
         super().__init__(parent)
+        self.type = eg_type
         # 这个参数是GraphicEdge的包装类，见下文
         self.edge_wrap = edge_wrap
         self.width = 10.0  # 线条的宽度
@@ -115,24 +126,24 @@ class GraphicEdge(QGraphicsPathItem):
         return self.scene().edges.index(self)
 
 
-class QT_wire(Edge):
-    def __init__(self, stored_data):  # sequence type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0
-        super().__init__()
-        self.stored_data = stored_data
-        self.pix = QPixmap("./QT_wire.jpg")
-
-    def remove(self):
-        self.stored_data.clear()
-
-    def push_data(self):
-        pass
-
-
-class QT_transformer(Edge):
-    def __init__(self, stored_data):  # sequence Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0
-        super().__init__()
-        self.stored_data = stored_data
-        self.pix = QPixmap("./QT_transformer.jpg")
-
-    def remove(self):
-        self.stored_data.clear()
+# class QT_wire(Edge):
+#     def __init__(self, stored_data):  # sequence type=1, Dm=0, diameter=0, line_distance=0, length=0, S_wire=0
+#         super().__init__()
+#         self.stored_data = stored_data
+#         self.pix = QPixmap("./QT_wire.jpg")
+#
+#     def remove(self):
+#         self.stored_data.clear()
+#
+#     def push_data(self):
+#         pass
+#
+#
+# class QT_transformer(Edge):
+#     def __init__(self, stored_data):  # sequence Sn=0, Pk=0, Uk=0, Po=0, Io=0, Uh=0, Ul=0
+#         super().__init__()
+#         self.stored_data = stored_data
+#         self.pix = QPixmap("./QT_transformer.jpg")
+#
+#     def remove(self):
+#         self.stored_data.clear()
