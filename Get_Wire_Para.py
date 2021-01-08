@@ -198,6 +198,8 @@ def Admittance_bus(size_n, type, Da, Db, Dc, diameter, line_distance, length, S_
 
     return Topology
 
+temp_Topology = Admittance_bus(size_n, type, Da, Db, Dc, diameter, line_distance, length, S_wire)
+
 
 
 '''
