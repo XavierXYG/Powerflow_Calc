@@ -357,12 +357,12 @@ class GraphicView(QGraphicsView):
     def get_edge_at_click(self, event):
         """ 获取点击位置的Edge，无则返回None. """
         pos = [event.pos().x(), event.pos().y()]
-        print(pos)
+        # print(pos)
         distance = []
         for edge in self.gr_scene.edges:
             distance_element = calculate_distance(edge.pos_src, edge.pos_dst, pos)
             distance.append(distance_element)
-            print(edge.pos_src, edge.pos_dst)
+            # print(edge.pos_src, edge.pos_dst)
         min_value = min(distance)
         if min_value <= 10:
             result_edge = self.gr_scene.edges[distance.index(min_value)]
@@ -392,7 +392,7 @@ class GraphicView(QGraphicsView):
 class GraphicItem(QGraphicsPixmapItem):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.pix = QPixmap("./icon.jpg")
+        self.pix = QPixmap("./images/icon.jpg")
         self.width = 100  # 图元宽
         self.height = 100  # 图元高
         self.setPixmap(self.pix)  # 设置图元
