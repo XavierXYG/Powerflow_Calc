@@ -9,6 +9,7 @@ from PyQt5.QtGui import QColor, QPen, QPainter
 from PyQt5.QtCore import QLine, QPointF, QObject, pyqtSignal, pyqtSlot
 from PyQt5 import QtCore
 from PyQt5.QtGui import QFont, QPalette, QIcon
+from PyQt5 import QtGui
 
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
@@ -79,21 +80,21 @@ class Dialog(QWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    # def mousePressEvent(self, event):
-    #     if event.button() == QtCore.Qt.LeftButton:
-    #         self.m_flag = True
-    #         self.m_Position = event.globalPos() - self.pos()  # 获取鼠标相对窗口的位置
-    #         event.accept()
-    #         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))  # 更改鼠标图标
-    #
-    # def mouseMoveEvent(self, QMouseEvent):
-    #     if QtCore.Qt.LeftButton and self.m_flag:
-    #         self.move(QMouseEvent.globalPos() - self.m_Position)  # 更改窗口位置
-    #         QMouseEvent.accept()
-    #
-    # def mouseReleaseEvent(self, QMouseEvent):
-    #     self.m_flag = False
-    #     self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+    def mousePressEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            self.m_flag = True
+            self.m_Position = event.globalPos() - self.pos()  # 获取鼠标相对窗口的位置
+            event.accept()
+            self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))  # 更改鼠标图标
+
+    def mouseMoveEvent(self, QMouseEvent):
+        if QtCore.Qt.LeftButton and self.m_flag:
+            self.move(QMouseEvent.globalPos() - self.m_Position)  # 更改窗口位置
+            QMouseEvent.accept()
+
+    def mouseReleaseEvent(self, QMouseEvent):
+        self.m_flag = False
+        self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 
     def ok_clicked(self):
         pass
