@@ -1,7 +1,7 @@
 import math
 import sys
 from PyQt5.QtWidgets import QApplication, QGraphicsScene, QGraphicsView
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QTextEdit, QLineEdit, QComboBox
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QTextEdit, QLineEdit, QComboBox, QToolTip
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow
@@ -23,8 +23,10 @@ class Dialog(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.resize(450, 650)
-        self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)  # 让放大框选项不可用
+        # self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)  # 让放大框选项不可用
 
+
+        #设置窗口背景
         self.setWindowOpacity(0.9)  # 设置窗口透明度
         # self.setAttribute(QtCore.Qt.WA_TranslucentBackground) # 设置窗口背景透明
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏所有边框
@@ -33,17 +35,28 @@ class Dialog(QWidget):
         self.pe.setColor(self.backgroundRole(), QColor(3, 35, 14))  # 设置背景色
         self.setPalette(self.pe)
 
+
+        #设置提示语画板
+        QToolTip.setFont(QFont('JetBrain Mono', 10))
+        self.tool_bgd = QToolTip.palette()
+        self.tool_bgd.setColor(self.tool_bgd.Inactive, self.tool_bgd.ToolTipBase, QColor(3, 35, 14))
+        self.tool_bgd.setColor(self.tool_bgd.Inactive, self.tool_bgd.ToolTipText, QColor(102, 102, 255))
+
         self.pushbutton_close = QPushButton(self)
         self.pushbutton_close.setGeometry(QtCore.QRect(30, 20, 30, 30))
         self.pushbutton_close.setObjectName("pushButton")
         self.pushbutton_close.setStyleSheet('''QPushButton{background:#F28086;border-radius:15px;}
         QPushButton:hover{background:#F6BFC1;}''')
 
+        self.pushbutton_close.setToolTip('<b>Close</b>')
+        self.pushbutton_close.setPalette(self.pe)
+
         self.pushbutton_mini = QPushButton(self)
         self.pushbutton_mini.setGeometry(QtCore.QRect(80, 20, 30, 30))
         self.pushbutton_mini.setObjectName("pushButton_mini")
         self.pushbutton_mini.setStyleSheet('''QPushButton{background:#8EC2F5;border-radius:15px;}
         QPushButton:hover{background:#A5DEF1;}''')
+        self.pushbutton_mini.setToolTip('<b>Minimize</b>')
 
         self.set_button = QPushButton('OK', self)
         self.set_button.setStyleSheet(
@@ -66,26 +79,23 @@ class Dialog(QWidget):
         self.label_style = '''QLabel{color:white;font-size:20px;font-family:JetBrains Mono;font-weight:bold;}'''
 
         # 设置子类文本框背景色和字体
-        bgColor = '#d7d7d7'  #文本框背景色
+        bgColor = '#d7d7d7'  # 文本框背景色
         self.text_style = """QLineEdit{{ color: #4C4C4C; border-width: 1px solid black;border-radius:10px;
             padding:2px 4px; background-color: {0}; color: #000000; 
                 font_family:JetBrains Mono;font-weight:bold; }} 
-            QLineEdit:hover{{ border: 5px solid #d7d7d7;}}""".format(
+            QLineEdit:hover{{ border: 2px solid #d7d7d7;}}""".format(
             bgColor)
 
-        self.select_text_style = """QComboBox{{ color: #4C4C4C; border: 1px solid black;border-radius:10px;
+        self.select_text_style = """QComboBox{{ color: #4C4C4C; border: 2px solid black;border-radius:10px;
                    padding:2px 4px; background-color: {0}; color: #000000; 
                        font_family:JetBrains Mono;font-weight:bold; }} 
-                   QComboBox:hover{{ border: 0px solid #d7d7d7;}}""".format(
+                   QComboBox:hover{{ border: 2px solid #d7d7d7;}}
+                   QComboBox:drop-down {{subcontrol-origin: padding;subcontrol-position: top right;width: 30px;}}
+                   QComboBox QAbstractItemView{{height: 100px; border: 2px; border-radius:10px;color:#000000; selection-color: #000000; 
+                   selection-background-color: #a5def1; padding:2px, 2px,4px,4px;}}
+                   QComboBox QAbstractItemView:item{{height: 10px; min-height: 10px;}}
+                   """.format(
             bgColor)
-        self.select_text_style = '''QComboBox{{ color: #4C4C4C; border: 1px solid black;border-radius:10px;
-                   padding:2px 4px; background-color: {0}; color: #000000; 
-                       font_family:JetBrains Mono;font-weight:bold; }} 
-                   QComboBox:hover{{ border: 0px solid #d7d7d7;}}'''.format(
-            bgColor)
-        #setStyleSheet("QComboBox QAbstractItemView {border:1px solid #dddddd;outline:0px;height:30px;	} QComboBox QAbstractItemView::item {min-height: 30px;background-color: rgb(255, 255, 255);color:#333;padding-left:11px;outline:0px;} QComboBox QAbstractItemView::item:hover {color:#333;background-color: #e9f2ff;}"
-
-
 
     def center(self):
         # 获得窗口
@@ -125,15 +135,13 @@ class Dialog(QWidget):
 class PQ_Dialog(Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Set PQ Bus Parameters')
         self.resize(480, 300)
-        self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
 
         self.PQ_text = [[]] * 2
         self.set_button.move(280, 250)
         self.cancel_button.move(380, 250)
 
-        self.P_label = QPushButton(self)
+        self.P_label = QLabel(self)
         self.P_label.move(100, 100)
         self.P_label.setText('P(w)')
         self.P_label.setStyleSheet(self.label_style)
@@ -152,7 +160,6 @@ class PQ_Dialog(Dialog):
         self.Q_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        self.show()
 
     def save_text(self):
         self.PQ_text = [self.P_data.text(), self.Q_data.text()]
@@ -162,9 +169,7 @@ class PQ_Dialog(Dialog):
 class PV_Dialog(Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Set PV Bus Parameters')
         self.resize(480, 300)
-        self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
 
         self.PV_text = [[]] * 2
 
@@ -200,21 +205,19 @@ class PV_Dialog(Dialog):
 class VA_Dialog(Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Set VA Bus Parameters')
-        self.resize(480, 300)
-        self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
+        self.resize(530, 300)
 
         self.VA_text = [[]] * 2
 
-        self.set_button.move(280, 250)
-        self.cancel_button.move(380, 250)
+        self.set_button.move(330, 250)
+        self.cancel_button.move(430, 250)
 
         self.V_label = QLabel(self)
         self.V_label.move(100, 100)
         self.V_label.setText('V(v)')
         self.V_label.setStyleSheet(self.label_style)
         self.V_data = QLineEdit(self)
-        self.V_data.move(200, 100)
+        self.V_data.move(250, 100)
         self.V_data.setPlaceholderText("请输入V(v)")
         self.V_data.setStyleSheet(self.text_style)
 
@@ -223,8 +226,8 @@ class VA_Dialog(Dialog):
         self.A_label.setText('V的辐角(度)')
         self.A_label.setStyleSheet(self.label_style)
         self.A_data = QLineEdit(self)
-        self.A_data.move(200, 160)
-        self.A_data.setPlaceholderText("请输入V的辐角（度）")
+        self.A_data.move(250, 160)
+        self.A_data.setPlaceholderText("请输入V的辐角")
         self.A_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
@@ -238,9 +241,7 @@ class VA_Dialog(Dialog):
 class Wire_Dialog(Dialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Set Wire Parameters')
         self.resize(650, 650)
-        self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)
 
         self.wire_text = [[]] * 6  # type, Dm, diameter, line_distance, length, S_wire
 
@@ -329,9 +330,12 @@ class Wire_Dialog(Dialog):
     def selected_type(self):
         if self.type_select.highlighted():
             self.selected_type_index = self.type_select.currentIndex()
+        return self.selected_type_index
 
     def save_text(self):
-        self.wire_text = [self.selected_type_index, self.Dm_data.text(), self.diameter_data.text(),
+        self.wire_text = [self.type_select.currentIndex(), self.D1_data.text(), self.D2_data.text(),
+                          self.D3_data.text(),
+                          self.diameter_data.text(),
                           self.line_distance_data.text(),
                           self.length_data.text(), self.S_wire_data.text()]
         self.close()
@@ -423,7 +427,7 @@ class Transformer_Dialog(Dialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = Wire_Dialog()
+    win = VA_Dialog()
     win.show()
-    #print(win.tf_text)
+    # print(win.tf_text)
     sys.exit(app.exec_())
