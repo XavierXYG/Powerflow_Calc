@@ -63,11 +63,12 @@ class MainWindow(QMainWindow):
         self.view.selected_node_type = 'PV'
 
     def add_transformer(self):
-        self.view.selected_edge_type = 'transformer'
+        self.view.selected_edge_type = 'TF'
+        self.view.addEdgeHandle('TF')
 
     def add_line(self):
-        self.view.selected_edge_type = 'wire'
-        self.view.addEdgeHandle()
+        self.view.selected_edge_type = 'TL'
+        self.view.addEdgeHandle('TL')
 
     def initWindow(self):
         # ---- Menu Bar Actions ----
@@ -198,12 +199,12 @@ class GraphicScene(QGraphicsScene):
 
     def add_edge(self, edge):
         self.edges.append(edge)
-        self.addItem(edge)
+        self.addItem(edge.gr_edge)
         self.edges = sorted(set(self.edges), key=self.edges.index)  # 删除重复项
 
     def remove_edge(self, edge):
         self.edges.remove(edge)
-        self.removeItem(edge)
+        self.removeItem(edge.gr_edge)
         self.edges = sorted(set(self.edges), key=self.edges.index)
 
     # override
@@ -252,6 +253,7 @@ class GraphicView(QGraphicsView):
         self.parent = parent
 
         self.edge_enable = False  # 用来记录目前是否可以画线条
+        self.enabled_edge_type = "TL"  # TL or TF
         self.drag_edge = None  # 记录拖拽时的线
         self.selected_item_index = 0  # 记录当前被选中的图元的index
         self.selected_edge_index = 0  # 记录当前被选中的edge的index
@@ -286,8 +288,9 @@ class GraphicView(QGraphicsView):
         # new_node.gr_node.setPos(500, 500)
         self.gr_scene.add_node(new_node)
 
-    def addEdgeHandle(self):
-        self.edge_enable = ~self.edge_enable
+    def addEdgeHandle(self, eg_type):
+        self.edge_enable = True
+        self.enabled_edge_type = eg_type
 
     # override
     def keyPressEvent(self, event):
@@ -297,7 +300,7 @@ class GraphicView(QGraphicsView):
 
         # 当按下E键时，启动线条功能，再次按下则是关闭
         if event.key() == Qt.Key_E:
-            self.addEdgeHandle()
+            self.addEdgeHandle('TL')
 
         if event.key() == Qt.Key_Escape:
             self.edge_enable = False
@@ -310,7 +313,7 @@ class GraphicView(QGraphicsView):
                 self.gr_scene.remove_node(item)
         elif self.edge_enable:
             if isinstance(item, GraphicItem):  # 判断点击对象是否为图元的实例, 确认起点是图元后，开始拖拽
-                self.edge_drag_start(item)
+                self.edge_drag_start(self.enabled_edge_type, item)
         else:
             # 如果写到最开头，则线条拖拽功能会不起作用
             super().mousePressEvent(event)
@@ -324,8 +327,8 @@ class GraphicView(QGraphicsView):
             dialog.show()
         else:
             edge = self.get_edge_at_click(event)
-            if isinstance(edge, GraphicEdge):
-                self.selected_edge_index = edge.getEdgeIndex()
+            if isinstance(edge.gr_edge, GraphicEdge):
+                self.selected_edge_index = edge.gr_edge.getEdgeIndex()
                 print(self.selected_edge_index)
 
     def mouseReleaseEvent(self, event):
@@ -335,7 +338,7 @@ class GraphicView(QGraphicsView):
             item = self.get_item_at_click(event)
             # 终点图元不能是起点图元，即无环图
             if isinstance(item, GraphicItem) and item is not self.drag_start_item:
-                self.edge_drag_end(item)
+                self.edge_drag_end(self.enabled_edge_type, item)
             else:
                 self.drag_edge.remove()
                 self.drag_edge = None
@@ -369,7 +372,7 @@ class GraphicView(QGraphicsView):
         pos = [sc_pos.x(), sc_pos.y()]
         distance = []
         for edge in self.gr_scene.edges:
-            distance_element = calculate_distance(edge.pos_src, edge.pos_dst, pos)
+            distance_element = calculate_distance(edge.gr_edge.pos_src, edge.gr_edge.pos_dst, pos)
             distance.append(distance_element)
             # print(edge.pos_src, edge.pos_dst)
         if len(distance):
@@ -390,12 +393,12 @@ class GraphicView(QGraphicsView):
     #             return edge
     #     return None
 
-    def edge_drag_start(self, item):
+    def edge_drag_start(self, eg_type, item):
         self.drag_start_item = item
-        self.drag_edge = Edge(self.gr_scene, self.drag_start_item, None)  # 开始拖拽线条，注意到拖拽终点为None
+        self.drag_edge = Edge(self.gr_scene, eg_type, self.drag_start_item, None)  # 开始拖拽线条，注意到拖拽终点为None
 
-    def edge_drag_end(self, item):
-        new_edge = Edge(self.gr_scene, self.drag_start_item, item)  # 拖拽结束
+    def edge_drag_end(self, eg_type, item):
+        new_edge = Edge(self.gr_scene, eg_type, self.drag_start_item, item)  # 拖拽结束
         self.drag_edge.remove()  # 删除拖拽时画的线
         self.drag_edge = None
         new_edge.store()  # 保存最终产生的连接线

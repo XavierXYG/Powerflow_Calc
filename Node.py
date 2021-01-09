@@ -13,9 +13,10 @@ from Dialog import *
 
 class Node:
     def __init__(self, scene, nd_type, x=500, y=500):
+        # super().__init__()
         self.scene = scene
         self.type = nd_type
-        self.gr_node = GraphicItem(nd_type)
+        self.gr_node = GraphicItem(self)
         self.gr_node.setPos(x, y)
         if nd_type == "PQ":
             self.data_dialog = PQ_Dialog()
@@ -29,9 +30,11 @@ class Node:
 
 
 class GraphicItem(QGraphicsPixmapItem):
-    def __init__(self, nd_type, parent=None):
+    def __init__(self, node_wrap, parent=None):
         super().__init__(parent)
-        self.type = nd_type
+        self.type = node_wrap.type
+        self.node_wrap = node_wrap
+        nd_type = self.type
         self.pix = QPixmap("./icon.jpg")
         if nd_type == "PQ":
             self.pix = QPixmap("./images/p_q.png")
@@ -55,7 +58,7 @@ class GraphicItem(QGraphicsPixmapItem):
                 gr_edge.edge_wrap.update_positions()
 
     def getNodeIndex(self):
-        return self.scene().nodes.index(self)
+        return self.scene().nodes.index(self.node_wrap)
 
 
 # class Graphic_PQ(GraphicItem):

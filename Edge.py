@@ -14,17 +14,15 @@ from Dialog import *
 class Edge:
     def __init__(self, scene, eg_type, start_item, end_item):
         # 参数分别为场景、开始图元、结束图元
-        super().__init__()
+        # super().__init__()
         self.scene = scene
         self.type = eg_type
         self.start_item = start_item
         self.end_item = end_item
-
         # 线条图形在此处创建
-        self.gr_edge = GraphicEdge(self, eg_type)
+        self.gr_edge = GraphicEdge(self)
         # 此类一旦被初始化就在添加进scene
-        self.scene.add_edge(self.gr_edge)
-
+        self.scene.add_edge(self)
         if eg_type == "TF":
             self.data_dialog = Transformer_Dialog()
         elif eg_type == "TL":
@@ -38,7 +36,7 @@ class Edge:
 
     # 最终保存进scene
     def store(self):
-        self.scene.add_edge(self.gr_edge)
+        self.scene.add_edge(self)
         self.data_dialog.show_dialog()
 
     # 更新位置
@@ -63,14 +61,14 @@ class Edge:
     # 移除线条
     def remove(self):
         self.remove_from_current_items()
-        self.scene.remove_edge(self.gr_edge)
+        self.scene.remove_edge(self)
         self.gr_edge = None
 
 
 class GraphicEdge(QGraphicsPathItem):
-    def __init__(self, eg_type, edge_wrap, parent=None):
+    def __init__(self, edge_wrap, parent=None):
         super().__init__(parent)
-        self.type = eg_type
+        self.type = edge_wrap.type
         # 这个参数是GraphicEdge的包装类，见下文
         self.edge_wrap = edge_wrap
         self.width = 10.0  # 线条的宽度
@@ -123,7 +121,8 @@ class GraphicEdge(QGraphicsPathItem):
             painter.drawPath(path)
 
     def getEdgeIndex(self):
-        return self.scene().edges.index(self)
+        r = self.scene().edges.index(self.edge_wrap)
+        return r
 
 
 # class QT_wire(Edge):
