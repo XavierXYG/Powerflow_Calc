@@ -27,7 +27,7 @@ def dfun(x, num):
     return df_1
 
 
-def Newton(x, num, accuracy):
+def Newton(x, num, accuracy=1e-6):
     x1 = np.copy(x)
     i = 0
     delta = np.copy(x)
