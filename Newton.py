@@ -43,7 +43,7 @@ def Newton(x, num, accuracy=1e-6):
 
 #################################################
 # 测试
-x = np.ones(4, dtype=float)
+x = np.ones(4, dtype=float)*200000
 accuracy = 1e-6
 # num在interface里给出
 if __name__ == "__main__":
