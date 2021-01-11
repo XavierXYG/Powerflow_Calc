@@ -121,8 +121,7 @@ class GraphicEdge(QGraphicsPathItem):
             painter.drawPath(path)
 
     def getEdgeIndex(self):
-        r = self.scene().edges.index(self.edge_wrap)
-        return r
+        return self.scene().edges.index(self.edge_wrap)
 
 
 # class QT_wire(Edge):

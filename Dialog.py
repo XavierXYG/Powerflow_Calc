@@ -325,7 +325,7 @@ class Wire_Dialog(Dialog):
 
         self.wire_text = []
         self.set_button.clicked.connect(lambda: self.save_text())
-        self.show()
+        # self.show()
 
     def selected_type(self):
         if self.type_select.highlighted():
@@ -416,7 +416,7 @@ class Transformer_Dialog(Dialog):
         self.Ul_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        self.show()
+        # self.show()
 
     def save_text(self):
         self.tf_text = [self.Sn_data.text(), self.Pk_data.text(), self.Uk_data.text(), self.Po_data.text(),
@@ -425,9 +425,34 @@ class Transformer_Dialog(Dialog):
         self.close()
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    win = VA_Dialog()
-    win.show()
-    # print(win.tf_text)
-    sys.exit(app.exec_())
+class File_Dialog(Dialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle('Set Transformer Parameters')
+        self.resize(550, 600)
+        self.file_name = ""
+        self.set_button.move(350, 550)
+        self.cancel_button.move(450, 550)
+
+        self.Name_label = QLabel(self)
+        self.Name_label.move(100, 100)
+        self.Name_label.setText('Sn(MVA)')
+        self.Name_label.setStyleSheet(self.label_style)
+        self.File_name = QLineEdit(self)
+        self.File_name.move(200, 100)
+        self.File_name.setPlaceholderText("请输入文件名称")
+        self.File_name.setStyleSheet(self.text_style)
+
+        self.set_button.clicked.connect(lambda: self.save_text())
+
+    def save_text(self):
+        self.file_name = self.File_name.text()
+        print(self.file_name)
+        self.close()
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     win = VA_Dialog()
+#     win.show()
+#     # print(win.tf_text)
+#     sys.exit(app.exec_())

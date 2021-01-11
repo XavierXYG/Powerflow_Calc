@@ -60,6 +60,9 @@ class GraphicItem(QGraphicsPixmapItem):
     def getNodeIndex(self):
         return self.scene().nodes.index(self.node_wrap)
 
+    def getNodeWrap(self):
+        return self.node_wrap
+
 
 # class Graphic_PQ(GraphicItem):
 #     def __init__(self, P, Q, parent=None):

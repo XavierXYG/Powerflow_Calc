@@ -12,6 +12,7 @@ from PyQt5.QtGui import QPixmap, QPainterPath
 
 from Edge import *
 from Node import *
+from Dialog import *
 from Calculate_Distance import calculate_distance
 
 
@@ -44,7 +45,16 @@ class MainWindow(QMainWindow):
         pass
 
     def saveFile(self):
-        pass
+        file_dialog = File_Dialog()
+        file_name = File_Dialog.file_name
+        if file_name == "":
+            return
+        else:
+            print(file_name + ".txt")
+            f = open(file_name+".txt", "w")
+            f.write(str("Nodes:"+"\n"))
+            for node in self.scene.nodes:
+                f.write(str("Node Index:"+str(node.gr_node.getNodeIndex())+"\n"))
 
     def openGuide(self):
         pass
@@ -58,9 +68,11 @@ class MainWindow(QMainWindow):
 
     def add_p_q(self):
         self.view.selected_node_type = 'PQ'
+        self.view.addNodeHandle('PQ')
 
     def add_p_v(self):
         self.view.selected_node_type = 'PV'
+        self.view.addNodeHandle('PV')
 
     def add_transformer(self):
         self.view.selected_edge_type = 'TF'
@@ -323,13 +335,17 @@ class GraphicView(QGraphicsView):
         if isinstance(item, GraphicItem):
             self.selected_item_index = item.getNodeIndex()
             print(self.selected_item_index)
-            dialog = QWidget()
-            dialog.show()
+            selected_node = item.getNodeWrap()
+            selected_node.data_dialog.show_dialog()
+            # dialog = QWidget()
+            # dialog.show()
+
         else:
             edge = self.get_edge_at_click(event)
             if isinstance(edge.gr_edge, GraphicEdge):
                 self.selected_edge_index = edge.gr_edge.getEdgeIndex()
                 print(self.selected_edge_index)
+                edge.data_dialog.show_dialog()
 
     def mouseReleaseEvent(self, event):
         if self.edge_enable:
