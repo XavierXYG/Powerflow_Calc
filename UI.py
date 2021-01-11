@@ -35,10 +35,11 @@ class MainWindow(QMainWindow):
         self.setMinimumWidth(1000)
         self.setCentralWidget(self.view)
         self.setWindowTitle("Graphics Demo")
+        self.resize(1000, 1000)
 
         # 美化
         # 设置窗口背景
-        self.setWindowOpacity(0.9)  # 设置窗口透明度
+        # self.setWindowOpacity(0.9)  # 设置窗口透明度
         # self.setAttribute(QtCore.Qt.WA_TranslucentBackground) # 设置窗口背景透明
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏所有边框
         QToolTip.setFont(QFont('JetBrain Mono', 9))
@@ -56,8 +57,8 @@ class MainWindow(QMainWindow):
         self.pushbutton_max.setObjectName("pushButton_max")
         self.pushbutton_max.setStyleSheet('''QPushButton{background:#FFD666;border-radius:15px;}
              QPushButton:hover{background:#F5DEB3;}''')
-        self.pushbutton_max.setToolTip('<b>Maximize</b>')
-        self.pushbutton_max.clicked.connect(lambda: self.show_max_window())  # 最大化窗口
+        self.pushbutton_max.setToolTip('<b>Larger</b>')
+        self.pushbutton_max.clicked.connect(lambda: self.show_change_window())  # 最大化窗口
 
         self.pushbutton_mini = QPushButton(self)
         self.pushbutton_mini.setGeometry(QtCore.QRect(950, 10, 30, 30))
@@ -67,12 +68,23 @@ class MainWindow(QMainWindow):
         self.pushbutton_mini.setToolTip('<b>Minimize</b>')
         self.pushbutton_mini.clicked.connect(self.showMinimized)  # 最小化窗口
 
-    def show_max_window(self):
-        self.showMaximized()
+    def show_change_window(self):
         desktop = QApplication.desktop()
-        self.pushbutton_close.move(desktop.width()-150, 10)
-        self.pushbutton_max.move(desktop.width() - 100, 10)
-        self.pushbutton_mini.move(desktop.width() - 50, 10)
+        if self.width() < desktop.width():
+            self.showMaximized()
+            # self.setWindowState(Qt.WindowMaximized)
+            self.pushbutton_close.move(desktop.width()-150, 10)
+            self.pushbutton_max.move(desktop.width() - 100, 10)
+            self.pushbutton_mini.move(desktop.width() - 50, 10)
+            self.pushbutton_max.setToolTip('<b>Smaller</b>')
+        else:
+            self.showNormal()
+            self.pushbutton_close.move(850, 10)
+            self.pushbutton_max.move(900, 10)
+            self.pushbutton_mini.move(950, 10)
+            self.pushbutton_max.setToolTip('<b>Larger</b>')
+
+
 
     def center(self):
         # 获得窗口
