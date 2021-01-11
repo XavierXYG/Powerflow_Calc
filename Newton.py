@@ -27,7 +27,7 @@ def dfun(x, num):
     return df_1
 
 
-def Newton(x, num, accuracy):
+def Newton(x, num, accuracy=1e-6):
     x1 = np.copy(x)
     i = 0
     delta = np.copy(x)
@@ -43,7 +43,7 @@ def Newton(x, num, accuracy):
 
 #################################################
 # 测试
-x = np.ones(4, dtype=float)
+x = np.ones(4, dtype=float)*200000
 accuracy = 1e-6
 # num在interface里给出
 if __name__ == "__main__":
