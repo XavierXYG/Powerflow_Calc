@@ -36,7 +36,69 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.view)
         self.setWindowTitle("Graphics Demo")
 
+        # 美化
+        # 设置窗口背景
+        self.setWindowOpacity(0.9)  # 设置窗口透明度
+        # self.setAttribute(QtCore.Qt.WA_TranslucentBackground) # 设置窗口背景透明
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏所有边框
+        QToolTip.setFont(QFont('JetBrain Mono', 9))
 
+        self.pushbutton_close = QPushButton(self)
+        self.pushbutton_close.setGeometry(QtCore.QRect(850, 10, 30, 30))
+        self.pushbutton_close.setObjectName("pushButton")
+        self.pushbutton_close.setStyleSheet('''QPushButton{background:#F28086;border-radius:15px;}
+             QPushButton:hover{background:#F6BFC1;}''')
+        self.pushbutton_close.setToolTip('<b>Close</b>')
+        self.pushbutton_close.clicked.connect(self.close)  # 关闭窗口
+
+        self.pushbutton_max = QPushButton(self)
+        self.pushbutton_max.setGeometry(QtCore.QRect(900, 10, 30, 30))
+        self.pushbutton_max.setObjectName("pushButton_max")
+        self.pushbutton_max.setStyleSheet('''QPushButton{background:#FFD666;border-radius:15px;}
+             QPushButton:hover{background:#F5DEB3;}''')
+        self.pushbutton_max.setToolTip('<b>Maximize</b>')
+        self.pushbutton_max.clicked.connect(lambda: self.show_max_window())  # 最大化窗口
+
+        self.pushbutton_mini = QPushButton(self)
+        self.pushbutton_mini.setGeometry(QtCore.QRect(950, 10, 30, 30))
+        self.pushbutton_mini.setObjectName("pushButton_mini")
+        self.pushbutton_mini.setStyleSheet('''QPushButton{background:#8EC2F5;border-radius:15px;}
+             QPushButton:hover{background:#A5DEF1;}''')
+        self.pushbutton_mini.setToolTip('<b>Minimize</b>')
+        self.pushbutton_mini.clicked.connect(self.showMinimized)  # 最小化窗口
+
+    def show_max_window(self):
+        self.showMaximized()
+        desktop = QApplication.desktop()
+        self.pushbutton_close.move(desktop.width()-150, 10)
+        self.pushbutton_max.move(desktop.width() - 100, 10)
+        self.pushbutton_mini.move(desktop.width() - 50, 10)
+
+    def center(self):
+        # 获得窗口
+        qr = self.frameGeometry()
+        # 获得屏幕中心点
+        cp = QDesktopWidget().availableGeometry().center()
+        # 显示到屏幕中心
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+    # 让窗口可以移动
+    def mousePressEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            self.m_flag = True
+            self.m_Position = event.globalPos() - self.pos()  # 获取鼠标相对窗口的位置
+            event.accept()
+            self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))  # 更改鼠标图标
+
+    def mouseMoveEvent(self, QMouseEvent):
+        if QtCore.Qt.LeftButton and self.m_flag:
+            self.move(QMouseEvent.globalPos() - self.m_Position)  # 更改窗口位置
+            QMouseEvent.accept()
+
+    def mouseReleaseEvent(self, QMouseEvent):
+        self.m_flag = False
+        self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 
     def addFile(self):
         pass
@@ -51,10 +113,10 @@ class MainWindow(QMainWindow):
             return
         else:
             print(file_name + ".txt")
-            f = open(file_name+".txt", "w")
-            f.write(str("Nodes:"+"\n"))
+            f = open(file_name + ".txt", "w")
+            f.write(str("Nodes:" + "\n"))
             for node in self.scene.nodes:
-                f.write(str("Node Index:"+str(node.gr_node.getNodeIndex())+"\n"))
+                f.write(str("Node Index:" + str(node.gr_node.getNodeIndex()) + "\n"))
 
     def openGuide(self):
         pass
@@ -119,6 +181,7 @@ class MainWindow(QMainWindow):
         add_v_theta_action = QAction(QIcon('./images/v_theta.png'), 'Add V-theta Bus', self)
         add_v_theta_action.setStatusTip('Add V-theta Bus')
         add_v_theta_action.triggered.connect(self.add_v_theta)
+        add_v_theta_action.setFont(QFont('JetBrain Mono', 9))
         # Add_PV_Bus
         add_p_v_action = QAction(QIcon('./images/p_v.png'), 'Add P-V Bus', self)
         add_p_v_action.setStatusTip('Add P-V Bus')

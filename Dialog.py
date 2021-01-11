@@ -32,12 +32,12 @@ class Dialog(QWidget):
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏所有边框
         self.pe = QPalette()
         self.setAutoFillBackground(True)
-        self.pe.setColor(self.backgroundRole(), QColor(3, 35, 14))  # 设置背景色
+        self.pe.setColor(self.backgroundRole(), QColor(88, 87, 86))  # 设置背景色
         self.setPalette(self.pe)
 
 
         #设置提示语画板
-        QToolTip.setFont(QFont('JetBrain Mono', 10))
+        QToolTip.setFont(QFont('JetBrain Mono', 9))
         self.tool_bgd = QToolTip.palette()
         self.tool_bgd.setColor(self.tool_bgd.Inactive, self.tool_bgd.ToolTipBase, QColor(3, 35, 14))
         self.tool_bgd.setColor(self.tool_bgd.Inactive, self.tool_bgd.ToolTipText, QColor(102, 102, 255))
@@ -49,6 +49,7 @@ class Dialog(QWidget):
         QPushButton:hover{background:#F6BFC1;}''')
 
         self.pushbutton_close.setToolTip('<b>Close</b>')
+        self.setAutoFillBackground(True)
         self.pushbutton_close.setPalette(self.pe)
 
         self.pushbutton_mini = QPushButton(self)
@@ -60,7 +61,7 @@ class Dialog(QWidget):
 
         self.set_button = QPushButton('OK', self)
         self.set_button.setStyleSheet(
-            '''QPushButton{background:#007575;border-radius:5px;font-family:JetBrains Mono;font-weight:bold;}QPushButton:hover{background:green;}''')
+            '''QPushButton{background:#8EC2F5;border-radius:5px;font-family:JetBrains Mono;font-weight:bold;}QPushButton:hover{background:#A5DEF1;}''')
         self.set_button.resize(80, 30)
         self.set_button.move(300, 600)
 
@@ -86,13 +87,13 @@ class Dialog(QWidget):
             QLineEdit:hover{{ border: 2px solid #d7d7d7;}}""".format(
             bgColor)
 
-        self.select_text_style = """QComboBox{{ color: #4C4C4C; border: 2px solid black;border-radius:10px;
+        self.select_text_style = """QComboBox{{ color: #4C4C4C; border: 0px solid black;border-radius:10px;
                    padding:2px 4px; background-color: {0}; color: #000000; 
                        font_family:JetBrains Mono;font-weight:bold; }} 
                    QComboBox:hover{{ border: 2px solid #d7d7d7;}}
-                   QComboBox:drop-down {{subcontrol-origin: padding;subcontrol-position: top right;width: 30px;}}
+                   QComboBox:drop-down {{subcontrol-origin: padding;subcontrol-position: top right;width: 30px;font_family:JetBrains Mono;font-weight:bold; }}
                    QComboBox QAbstractItemView{{height: 100px; border: 2px; border-radius:10px;color:#000000; selection-color: #000000; 
-                   selection-background-color: #a5def1; padding:2px, 2px,4px,4px;}}
+                   selection-background-color: #a5def1; padding:4px, 4px,4px,4px;}}
                    QComboBox QAbstractItemView:item{{height: 10px; min-height: 10px;}}
                    """.format(
             bgColor)
@@ -421,7 +422,7 @@ class Transformer_Dialog(Dialog):
     def save_text(self):
         self.tf_text = [self.Sn_data.text(), self.Pk_data.text(), self.Uk_data.text(), self.Po_data.text(),
                         self.Io_data.text(), self.Uh_data.text(), self.Ul_data.text()]
-        print(self.tf_text)
+        # print(self.tf_text)
         self.close()
 
 
@@ -450,9 +451,9 @@ class File_Dialog(Dialog):
         print(self.file_name)
         self.close()
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     win = VA_Dialog()
-#     win.show()
-#     # print(win.tf_text)
-#     sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    win = Wire_Dialog()
+    win.show()
+    # print(win.tf_text)
+    sys.exit(app.exec_())
