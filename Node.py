@@ -26,7 +26,7 @@ class Node:
             self.data_dialog = VA_Dialog()
         else:
             pass
-        self.data_dialog.show_dialog()
+        # self.data_dialog.show_dialog()
 
 
 class GraphicItem(QGraphicsPixmapItem):

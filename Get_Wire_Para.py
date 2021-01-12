@@ -193,15 +193,19 @@ def Admittance_wire(nodes, scene):  # type, Da, Db, Dc, diameter, line_distance,
                 temp_edge = link_edge(nodes[i], nodes[j], scene)
                 Topology[i][j] = get_wire(temp_edge.data_dialog.wire_text[0], temp_edge.data_dialog.wire_text[1],
                                           temp_edge.data_dialog.wire_text[2], temp_edge.data_dialog.wire_text[3],
-                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5])[
+                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5],
+                                          temp_edge.data_dialog.wire_text[6], temp_edge.data_dialog.wire_text[7]
+                                          )[
                     0]
                 Topology[i][i] = get_wire(temp_edge.data_dialog.wire_text[0], temp_edge.data_dialog.wire_text[1],
                                           temp_edge.data_dialog.wire_text[2], temp_edge.data_dialog.wire_text[3],
-                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5])[
+                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5],
+                                          temp_edge.data_dialog.wire_text[6], temp_edge.data_dialog.wire_text[7])[
                     1]
                 Topology[j][j] = get_wire(temp_edge.data_dialog.wire_text[0], temp_edge.data_dialog.wire_text[1],
                                           temp_edge.data_dialog.wire_text[2], temp_edge.data_dialog.wire_text[3],
-                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5])[
+                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5],
+                                          temp_edge.data_dialog.wire_text[6], temp_edge.data_dialog.wire_text[7])[
                     2]
     return Topology
 

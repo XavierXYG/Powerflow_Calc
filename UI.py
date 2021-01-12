@@ -128,14 +128,66 @@ class MainWindow(QMainWindow):
         self.scene.nodes = []
         self.scene.clear()
 
-        with open(str("./files/back_up.txt"), "r") as f:
+        with open(str("./files/mission.txt"), "r") as f:
             lines = f.readlines()
             for i in range(len(lines)):
+
                 if lines[i][:11] == "Node Index:":
-                    pass
+                    temp_type = lines[i + 1][10:-1]
+                    temp_item_x = float(lines[i + 2][4:-1])
+                    temp_item_y = float(lines[i + 3][4:-1])
+                    temp_node = Node(self.scene, temp_type, temp_item_x, temp_item_y)
+                    if lines[i + 4][0] == 'V':  # VA
+                        temp_node.data_dialog.V_data.setText(lines[i + 4][4:-1])
+                        temp_node.data_dialog.A_data.setText(lines[i + 5][4:-1])
+                    elif lines[i + 5][0] == 'Q':  # PQ
+                        temp_node.data_dialog.P_data.setText(lines[i + 4][4:-1])
+                        temp_node.data_dialog.Q_data.setText(lines[i + 5][4:-1])
+                    elif lines[i + 5][0] == 'V':  # PV
+                        temp_node.data_dialog.P_data.setText(lines[i + 4][4:-1])
+                        temp_node.data_dialog.V_data.setText(lines[i + 5][4:-1])
+                    else:
+                        pass
+
+                    self.scene.add_node(temp_node)
+                    temp_node.data_dialog.save_text()
+
                 elif lines[i][:11] == "Edge Index:":
-                    pass
+                    temp_type = lines[i + 1][10:-1]
+                    temp_start_x = float(lines[i + 3][4:-1])
+                    temp_start_y = float(lines[i + 4][4:-1])
+                    temp_start_item = self.scene.nodes[int(lines[i + 5][-2])].gr_node
+
+                    temp_end_x = float(lines[i + 7][4:-1])
+                    temp_end_y = float(lines[i + 8][4:-1])
+                    temp_end_item = self.scene.nodes[int(lines[i + 9][-2])].gr_node
+
+                    temp_edge = Edge(self.scene, temp_type, temp_start_item, temp_end_item)
+
+                    if temp_type == "TL":
+                        temp_edge.data_dialog.type_select.selectIndex = int(lines[i + 10][-2])
+                        temp_edge.data_dialog.D1_data.setText(lines[i + 11][5:-1])
+                        temp_edge.data_dialog.D2_data.setText(lines[i + 12][5:-1])
+                        temp_edge.data_dialog.D3_data.setText(lines[i + 13][5:-1])
+                        temp_edge.data_dialog.diameter_data.setText(lines[i + 14][11:-1])
+                        temp_edge.data_dialog.line_distance_data.setText(lines[i + 15][16:-1])
+                        temp_edge.data_dialog.length_data.setText(lines[i + 16][9:-1])
+                        temp_edge.data_dialog.S_wire_data.setText(lines[i + 17][9:-1])
+                    elif temp_type == "TF":
+                        temp_edge.data_dialog.Sn_data.setText(lines[i + 10][5:-1])
+                        temp_edge.data_dialog.Pk_data.setText(lines[i + 11][5:-1])
+                        temp_edge.data_dialog.Uk_data.setText(lines[i + 12][5:-1])
+                        temp_edge.data_dialog.Po_data.setText(lines[i + 13][5:-1])
+                        temp_edge.data_dialog.Io_data.setText(lines[i + 14][5:-1])
+                        temp_edge.data_dialog.U_start_data.setText(lines[i + 15][5:-1])
+                        temp_edge.data_dialog.U_end_data.setText(lines[i + 16][5:-1])
+                    else:
+                        pass
+
+                    temp_edge.data_dialog.save_text()
+
             f.close()
+            # print(len(self.scene.edges))
 
     def saveFile(self):
         file_name = "back_up"
@@ -151,14 +203,14 @@ class MainWindow(QMainWindow):
                 f.write(str("y = " + str(node.gr_node.pos().y()) + "\n"))
 
                 if node.type == "PQ":
-                    f.write(str("P = " + str(node.data_dialog.PQ_text[0]) + "\n"))
-                    f.write(str("Q = " + str(node.data_dialog.PQ_text[1]) + "\n"))
+                    f.write(str("P = " + str(node.data_dialog.PQ_text[0] / 1e6) + "\n"))
+                    f.write(str("Q = " + str(node.data_dialog.PQ_text[1] / 1e6) + "\n"))
                 elif node.type == "PV":
-                    f.write(str("P = " + str(node.data_dialog.PV_text[0]) + "\n"))
-                    f.write(str("V = " + str(node.data_dialog.PV_text[1]) + "\n"))
+                    f.write(str("P = " + str(node.data_dialog.PV_text[0] / 1e6) + "\n"))
+                    f.write(str("V = " + str(node.data_dialog.PV_text[1] / 1e3) + "\n"))
                 elif node.type == "VTheta":
-                    f.write(str("V = " + str(node.data_dialog.VA_text[0]) + "\n"))
-                    f.write(str("Theta = " + str(node.data_dialog.VA_text[1]) + "\n"))
+                    f.write(str("V = " + str(node.data_dialog.VA_text[0] / 1e3) + "\n"))
+                    f.write(str("A = " + str(node.data_dialog.VA_text[1]) + "\n"))
                 else:
                     print("Error! Saving Wrong-typed nodes!")
 
@@ -169,15 +221,17 @@ class MainWindow(QMainWindow):
                 f.write(str("starting point: " + "\n"))
                 f.write(str("x = " + str(edge.gr_edge.pos_src[0]) + "\n"))
                 f.write(str("y = " + str(edge.gr_edge.pos_src[1]) + "\n"))
+                f.write(str("start item index = " + str(edge.start_item.getNodeIndex()) + "\n"))
                 f.write(str("ending point: " + "\n"))
                 f.write(str("x = " + str(edge.gr_edge.pos_dst[0]) + "\n"))
                 f.write(str("y = " + str(edge.gr_edge.pos_dst[1]) + "\n"))
+                f.write(str("end item index = " + str(edge.end_item.getNodeIndex()) + "\n"))
 
                 if edge.type == "TL":
                     f.write(str("type = " + str(edge.data_dialog.wire_text[0]) + "\n"))
-                    f.write(str("D1 = " + str(edge.data_dialog.wire_text[1]) + "\n"))
-                    f.write(str("D2 = " + str(edge.data_dialog.wire_text[2]) + "\n"))
-                    f.write(str("D3 = " + str(edge.data_dialog.wire_text[3]) + "\n"))
+                    f.write(str("D1 = " + str(edge.data_dialog.wire_text[1] / 1e3) + "\n"))
+                    f.write(str("D2 = " + str(edge.data_dialog.wire_text[2] / 1e3) + "\n"))
+                    f.write(str("D3 = " + str(edge.data_dialog.wire_text[3] / 1e3) + "\n"))
                     f.write(str("Diameter = " + str(edge.data_dialog.wire_text[4]) + "\n"))
                     f.write(str("Line Distance = " + str(edge.data_dialog.wire_text[5]) + "\n"))
                     f.write(str("Length = " + str(edge.data_dialog.wire_text[6]) + "\n"))
@@ -190,6 +244,9 @@ class MainWindow(QMainWindow):
                     f.write(str("Io = " + str(edge.data_dialog.tf_text[4]) + "\n"))
                     f.write(str("Uh = " + str(edge.data_dialog.tf_text[5]) + "\n"))
                     f.write(str("Ul = " + str(edge.data_dialog.tf_text[6]) + "\n"))
+                    f.write(str("hn = " + str(edge.data_dialog.tf_text[7]) + "\n"))
+                    f.write(str("ln = " + str(edge.data_dialog.tf_text[8]) + "\n"))
+
                 else:
                     print("Error! Saving Wrong-typed edges!")
 
@@ -269,11 +326,11 @@ class MainWindow(QMainWindow):
         add_p_q_action.setStatusTip('Add P-Q Bus')
         add_p_q_action.triggered.connect(self.add_p_q)
         # Add_Transformer
-        add_transformer_action = QAction(QIcon('./images/transformer.png'), 'Add Transformer', self)
+        add_transformer_action = QAction(QIcon('./images/transformer.jpg'), 'Add Transformer', self)
         add_transformer_action.setStatusTip('Add Transformer')
         add_transformer_action.triggered.connect(self.add_transformer)
         # Add_Transmission_Line
-        add_line_action = QAction(QIcon('./images/line.png'), 'Add Transmission Line', self)
+        add_line_action = QAction(QIcon('./images/line.jpg'), 'Add Transmission Line', self)
         add_line_action.setStatusTip('Add Transmission Line')
         add_line_action.triggered.connect(self.add_line)
         # Calculate
@@ -293,7 +350,7 @@ class MainWindow(QMainWindow):
         QMenu:item:selected{background-color:#F5DEB3; color:rgb(49,49,49);}
         QMenu:item{background-color:rgb(255,250,250); color:black; font_family:JetBrains Mono;font-weight:bold;padding:0px 0px; width: 230px;}
          ''')
-        
+
         self.menu_bar.setNativeMenuBar(False)
         file_menu = self.menu_bar.addMenu('File')
         help_menu = self.menu_bar.addMenu('Help')
@@ -454,8 +511,6 @@ class GraphicScene(QGraphicsScene):
         painter.setPen(self._pen_dark)
         if lines_dark:
             painter.drawLines(*lines_dark)
-
-
 
 
 class GraphicView(QGraphicsView):
@@ -633,36 +688,46 @@ class GraphicView(QGraphicsView):
 #         return self.scene().nodes.index(self)
 
 def run_algorithm(demo):
-
     print("0")
     temp_Topology = Admittance_wire(demo.scene.nodes, demo.scene)
+    print(temp_Topology)
 
     print("1")
     transformer_list = demo.getTransformers()
+    print(transformer_list)
 
     print("2")
     network_1 = Network(temp_Topology, transformer_list)
+    print(network_1)
 
     print("3")
     Topology = network_1.transform()
+    print(Topology)
 
     print("4")
     y_admittance = get_admittance_matrix(Topology)
+    print(y_admittance)
 
     print("5")
     factor = 220000
     if len(network_1.tfs_):
-        factor = network_1.U_init()
+        factor = network_1.U_init() * 1000
     else:
         for node in demo.scene.nodes:
             if node.type == "VTheta":
                 factor = node.data_dialog.VA_text[0]
                 break
+    print(factor)
     print("6")
     node_sum = demo.getNodeSum()
     bus_num = demo.getNodeTypeNumList()
     global_Y = demo.getGlobal_Y()
-    x = np.ones(bus_num, dtype=float) * factor
+
+    print(node_sum)
+    print(bus_num)
+    print(global_Y)
+
+    x = np.ones(node_sum, dtype=float) * factor / 2
     accuracy = 1e-6
     result = Newton(x, node_sum, accuracy, global_Y, bus_num, y_admittance)
     print("Newton: \n")
@@ -671,6 +736,7 @@ def run_algorithm(demo):
     print("7")
     print("Power Flow: \n")
     print(power_flow(result, y_admittance, demo.scene.nodes, demo.scene))
+
 
 def demo_run():
     app = QApplication(sys.argv)

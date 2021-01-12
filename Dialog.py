@@ -209,7 +209,7 @@ class PV_Dialog(Dialog):
         self.V_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        self.show()
+        # self.show()
 
     def save_text(self):
         P = 0
@@ -258,14 +258,14 @@ class VA_Dialog(Dialog):
         self.A_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        self.show()
+        # self.show()
 
     def save_text(self):
         V = 0
         A = 0
         if self.V_data.text() != "":
             try:
-                V = float(self.V_data.text())
+                V = float(self.V_data.text()) * 1000
             except ValueError:
                 pass
         if self.A_data.text() != "":
@@ -384,7 +384,7 @@ class Wire_Dialog(Dialog):
 
         if self.type_select.currentIndex() != "":
             try:
-                the_type = float(self.type_select.currentIndex())
+                the_type = float(self.type_select.currentIndex()) + 1
             except ValueError:
                 pass
 
@@ -613,9 +613,11 @@ class File_Dialog(Dialog):
         self.set_button.move(350, 550)
 
         self.Name_label.setStyleSheet(self.label_style)
+        self.set_button.clicked.connect(lambda: self.close_dialog())
+        self.show()
 
-        self.set_button.clicked.connect(self.close())
-        self.show_dialog()
+    def close_dialog(self):
+        self.close()
 
 
 if __name__ == '__main__':
