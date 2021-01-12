@@ -1,15 +1,12 @@
 from sympy import Matrix, lambdify
 from Global_X import getGlobal_X
 from U_Coefficient import *
-from UI import *
-
 
 
 # np.array([[0.12 - 0.16j, -0.12 + 0.16j],
 #                           [-0.12 + 0.16j, 0.12 - 0.16j]])
 # Global_Y = np.array([[10000000, 20000000], [242000, 0]]) #UI
 # BusNum = [1, 0, 1]
-
 
 
 def Interface(input, Global_Y, BusNum, y_admittance):  # 输入为三个表达式向量
@@ -59,7 +56,6 @@ def Interface(input, Global_Y, BusNum, y_admittance):  # 输入为三个表达�
     else:
         result = np.r_[result_PQ[0], result_PV[0], result_VA[0]]
     return result
-
 
 
 '''

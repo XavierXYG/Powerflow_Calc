@@ -2,7 +2,7 @@ import math
 import numpy
 from UI_Interface import link_vex
 
-def power_flow(U_matrix, admittance_matrix,nodes, scene):
+def power_flow(U_matrix, admittance_matrix, nodes, scene):
     size_n = int(numpy.array(U_matrix).shape[0] /2)
     S_Topology = numpy.zeros((size_n, size_n), dtype=numpy.complex_)
     delta_S_Topology = numpy.zeros((size_n, size_n), dtype=numpy.complex_)

@@ -1,6 +1,5 @@
 import sympy
 from sympy import Matrix, symbols, Lambda
-import UI
 
 
 def getGlobal_X(num):
