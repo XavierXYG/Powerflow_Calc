@@ -167,12 +167,12 @@ class PQ_Dialog(Dialog):
         Q = 0
         if self.P_data.text() != "":
             try:
-                P = float(self.P_data.text()) * 1000000
+                P = float(self.P_data.text())
             except ValueError:
                 pass
         if self.Q_data.text() != "":
             try:
-                Q = float(self.Q_data.text()) * 1000000
+                Q = float(self.Q_data.text())
             except ValueError:
                 pass
         self.PQ_text = [P, Q]
@@ -216,12 +216,12 @@ class PV_Dialog(Dialog):
         V = 0
         if self.P_data.text() != "":
             try:
-                P = float(self.P_data.text()) * 1000000
+                P = float(self.P_data.text())
             except ValueError:
                 pass
         if self.V_data.text() != "":
             try:
-                V = float(self.V_data.text()) * 1000
+                V = float(self.V_data.text())
             except ValueError:
                 pass
         self.PV_text = [P, V]
@@ -265,7 +265,7 @@ class VA_Dialog(Dialog):
         A = 0
         if self.V_data.text() != "":
             try:
-                V = float(self.V_data.text()) * 1000
+                V = float(self.V_data.text())
             except ValueError:
                 pass
         if self.A_data.text() != "":

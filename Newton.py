@@ -28,16 +28,25 @@ def dfun(x, num, Global_Y, BusNum, admittance_matrix):
 
 
 def Newton(x, num, accuracy, Global_Y, BusNum, admittance_matrix):
-    x1 = np.copy(x)
-    i = 0
-    delta = np.copy(x)
-    while np.sum(abs(delta)) > accuracy and i < 100:  # 控制循环次数
-        squeezed_x = Interface(x, Global_Y, BusNum, admittance_matrix).squeeze()
-        x1 = x - dot(dfun(x, num, Global_Y, BusNum, admittance_matrix), squeezed_x.T)  # 公式
-        delta = x1 - x  # 比较x的变化
-        x = x1
-        i = i + 1
-        print(i)                      #输出每次迭代的结果
+    with open(str("./files/result" + ".txt"), "w") as f:
+        x1 = np.copy(x)
+        i = 0
+        delta = np.copy(x)
+        while np.sum(abs(delta)) > accuracy and i < 200:  # 控制循环次数
+            squeezed_x = Interface(x, Global_Y, BusNum, admittance_matrix).squeeze()
+            x1 = x - dot(dfun(x, num, Global_Y, BusNum, admittance_matrix), squeezed_x.T)  # 公式
+            delta = x1 - x  # 比较x的变化
+            x = x1
+            i = i + 1
+            print(i)
+            f.write('\n')
+            f.write(str(i))
+            f.write('\n')
+            for index in range(len(x)):
+                f.write(str(x[index]))
+                f.write('\n')
+
+    f.close()
     return x
 
 

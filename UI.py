@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QTextEdit, QLineEdit
 # 图元库
 from PyQt5.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QGraphicsPathItem
 from PyQt5.QtGui import QPixmap, QPainterPath
+import random
 
 from Edge import *
 from Node import *
@@ -21,6 +22,8 @@ from Get_Admittance import get_admittance_matrix
 from Newton import Newton
 from Global_X import *
 from Calculate_S import power_flow
+from Interface import *
+from sympy import *
 
 
 class MainWindow(QMainWindow):
@@ -710,9 +713,9 @@ def run_algorithm(demo):
     print(y_admittance)
 
     print("5")
-    factor = 220000
+    factor = 220
     if len(network_1.tfs_):
-        factor = network_1.U_init() * 1000
+        factor = network_1.U_init()  -  random.random()
     else:
         for node in demo.scene.nodes:
             if node.type == "VTheta":
@@ -729,9 +732,10 @@ def run_algorithm(demo):
     print(global_Y)
 
     x = np.ones(node_sum, dtype=float) * factor
-    accuracy = 100000
-    result = Newton(x, node_sum, accuracy, global_Y, bus_num, y_admittance)
+    accuracy = 5
+    eqs, input_array = Interface(x, global_Y, bus_num, y_admittance)
     print("Newton: \n")
+    result = nsolve(eqs, input_array, np.ones(len(input_array)) * factor)
     print(result)
 
     print("7")
