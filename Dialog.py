@@ -144,20 +144,20 @@ class PQ_Dialog(Dialog):
 
         self.P_label = QLabel(self)
         self.P_label.move(100, 100)
-        self.P_label.setText('P(w)')
+        self.P_label.setText('P(Mw)')
         self.P_label.setStyleSheet(self.label_style)
         self.P_data = QLineEdit(self)
         self.P_data.move(200, 100)
-        self.P_data.setPlaceholderText("请输入P(w)")
+        self.P_data.setPlaceholderText("请输入P(Mw)")
         self.P_data.setStyleSheet(self.text_style)
 
         self.Q_label = QLabel(self)
         self.Q_label.move(100, 160)
-        self.Q_label.setText('Q(var)')
+        self.Q_label.setText('Q(Mvar)')
         self.Q_label.setStyleSheet(self.label_style)
         self.Q_data = QLineEdit(self)
         self.Q_data.move(200, 160)
-        self.Q_data.setPlaceholderText("请输入Q(var)")
+        self.Q_data.setPlaceholderText("请输入Q(Mvar)")
         self.Q_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
@@ -167,12 +167,12 @@ class PQ_Dialog(Dialog):
         Q = 0
         if self.P_data.text() != "":
             try:
-                P = float(self.P_data.text())
+                P = float(self.P_data.text()) * 1000000
             except ValueError:
                 pass
         if self.Q_data.text() != "":
             try:
-                Q = float(self.Q_data.text())
+                Q = float(self.Q_data.text()) * 1000000
             except ValueError:
                 pass
         self.PQ_text = [P, Q]
@@ -192,20 +192,20 @@ class PV_Dialog(Dialog):
 
         self.P_label = QLabel(self)
         self.P_label.move(100, 100)
-        self.P_label.setText('P(w)')
+        self.P_label.setText('P(Mw)')
         self.P_label.setStyleSheet(self.label_style)
         self.P_data = QLineEdit(self)
         self.P_data.move(200, 100)
-        self.P_data.setPlaceholderText("请输入P(w)")
+        self.P_data.setPlaceholderText("请输入P(Mw)")
         self.P_data.setStyleSheet(self.text_style)
 
         self.V_label = QLabel(self)
         self.V_label.move(100, 160)
-        self.V_label.setText('V(v)')
+        self.V_label.setText('电压(KV)')
         self.V_label.setStyleSheet(self.label_style)
         self.V_data = QLineEdit(self)
         self.V_data.move(200, 160)
-        self.V_data.setPlaceholderText("请输入V(v)")
+        self.V_data.setPlaceholderText("请输入电压(KV)")
         self.V_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
@@ -216,12 +216,12 @@ class PV_Dialog(Dialog):
         V = 0
         if self.P_data.text() != "":
             try:
-                P = float(self.P_data.text())
+                P = float(self.P_data.text()) * 1000000
             except ValueError:
                 pass
         if self.V_data.text() != "":
             try:
-                V = float(self.V_data.text())
+                V = float(self.V_data.text()) * 1000
             except ValueError:
                 pass
         self.PV_text = [P, V]
@@ -241,20 +241,20 @@ class VA_Dialog(Dialog):
 
         self.V_label = QLabel(self)
         self.V_label.move(100, 100)
-        self.V_label.setText('V(v)')
+        self.V_label.setText('电压(KV)')
         self.V_label.setStyleSheet(self.label_style)
         self.V_data = QLineEdit(self)
-        self.V_data.move(250, 100)
-        self.V_data.setPlaceholderText("请输入V(v)")
+        self.V_data.move(280, 100)
+        self.V_data.setPlaceholderText("请输入电压(KV)")
         self.V_data.setStyleSheet(self.text_style)
 
         self.A_label = QLabel(self)
         self.A_label.move(100, 160)
-        self.A_label.setText('V的辐角(度)')
+        self.A_label.setText('电压的辐角(度)')
         self.A_label.setStyleSheet(self.label_style)
         self.A_data = QLineEdit(self)
-        self.A_data.move(250, 160)
-        self.A_data.setPlaceholderText("请输入V的辐角")
+        self.A_data.move(280, 160)
+        self.A_data.setPlaceholderText("请输入电压的辐角")
         self.A_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
@@ -302,29 +302,29 @@ class Wire_Dialog(Dialog):
 
         self.D1_label = QLabel(self)
         self.D1_label.move(100, 160)
-        self.D1_label.setText('D1(mm)')
+        self.D1_label.setText('D1(m)')
         self.D1_label.setStyleSheet(self.label_style)
         self.D1_data = QLineEdit(self)
         self.D1_data.move(300, 160)
-        self.D1_data.setPlaceholderText("请输入D1(mm)")
+        self.D1_data.setPlaceholderText("请输入D1(m)")
         self.D1_data.setStyleSheet(self.text_style)
 
         self.D2_label = QLabel(self)
         self.D2_label.move(100, 220)
-        self.D2_label.setText('D2(mm)')
+        self.D2_label.setText('D2(m)')
         self.D2_label.setStyleSheet(self.label_style)
         self.D2_data = QLineEdit(self)
         self.D2_data.move(300, 220)
-        self.D2_data.setPlaceholderText("请输入D2(mm)")
+        self.D2_data.setPlaceholderText("请输入D2(m)")
         self.D2_data.setStyleSheet(self.text_style)
 
         self.D3_label = QLabel(self)
         self.D3_label.move(100, 280)
-        self.D3_label.setText('D3(mm)')
+        self.D3_label.setText('D3(m)')
         self.D3_label.setStyleSheet(self.label_style)
         self.D3_data = QLineEdit(self)
         self.D3_data.move(300, 280)
-        self.D3_data.setPlaceholderText("请输入D3(mm)")
+        self.D3_data.setPlaceholderText("请输入D3(m)")
         self.D3_data.setStyleSheet(self.text_style)
 
         self.diameter_label = QLabel(self)
@@ -347,7 +347,7 @@ class Wire_Dialog(Dialog):
 
         self.length_label = QLabel(self)
         self.length_label.move(100, 460)
-        self.length_label.setText('传输线长度(km)')
+        self.length_label.setText('传输线长度(Km)')
         self.length_label.setStyleSheet(self.label_style)
         self.length_data = QLineEdit(self)
         self.length_data.move(300, 460)
@@ -356,7 +356,7 @@ class Wire_Dialog(Dialog):
 
         self.S_wire_label = QLabel(self)
         self.S_wire_label.move(100, 520)
-        self.S_wire_label.setText('传输线导通截面积')
+        self.S_wire_label.setText('传输线截面积(mm^2)')
         self.S_wire_label.setStyleSheet(self.label_style)
         self.S_wire_data = QLineEdit(self)
         self.S_wire_data.move(300, 520)
@@ -390,19 +390,19 @@ class Wire_Dialog(Dialog):
 
         if self.D1_data.text() != "":
             try:
-                D1 = float(self.D1_data.text())
+                D1 = float(self.D1_data.text()) * 1000
             except ValueError:
                 pass
 
         if self.D2_data.text() != "":
             try:
-                D2 = float(self.D2_data.text())
+                D2 = float(self.D2_data.text()) * 1000
             except ValueError:
                 pass
 
         if self.D3_data.text() != "":
             try:
-                D3 = float(self.D3_data.text())
+                D3 = float(self.D3_data.text()) * 1000
             except ValueError:
                 pass
 
@@ -460,17 +460,17 @@ class Transformer_Dialog(Dialog):
         self.Sn_label.setText('Sn(MVA)')
         self.Sn_label.setStyleSheet(self.label_style)
         self.Sn_data = QLineEdit(self)
-        self.Sn_data.move(200, 100)
+        self.Sn_data.move(250, 100)
         self.Sn_data.setPlaceholderText("请输入Sn(MVA)")
         self.Sn_data.setStyleSheet(self.text_style)
 
         self.Pk_label = QLabel(self)
         self.Pk_label.move(100, 160)
-        self.Pk_label.setText('Pk(kW)')
+        self.Pk_label.setText('Pk(KW)')
         self.Pk_label.setStyleSheet(self.label_style)
         self.Pk_data = QLineEdit(self)
-        self.Pk_data.move(200, 160)
-        self.Pk_data.setPlaceholderText("请输入Pk(kW)")
+        self.Pk_data.move(250, 160)
+        self.Pk_data.setPlaceholderText("请输入Pk(KW)")
         self.Pk_data.setStyleSheet(self.text_style)
 
         self.Uk_label = QLabel(self)
@@ -478,17 +478,17 @@ class Transformer_Dialog(Dialog):
         self.Uk_label.setText('Uk(%)')
         self.Uk_label.setStyleSheet(self.label_style)
         self.Uk_data = QLineEdit(self)
-        self.Uk_data.move(200, 220)
+        self.Uk_data.move(250, 220)
         self.Uk_data.setPlaceholderText("请输入Uk(%)")
         self.Uk_data.setStyleSheet(self.text_style)
 
         self.Po_label = QLabel(self)
         self.Po_label.move(100, 280)
-        self.Po_label.setText('Po(kW)')
+        self.Po_label.setText('Po(KW)')
         self.Po_label.setStyleSheet(self.label_style)
         self.Po_data = QLineEdit(self)
-        self.Po_data.move(200, 280)
-        self.Po_data.setPlaceholderText("请输入Po(kW)")
+        self.Po_data.move(250, 280)
+        self.Po_data.setPlaceholderText("请输入Po(KW)")
         self.Po_data.setStyleSheet(self.text_style)
 
         self.Io_label = QLabel(self)
@@ -496,26 +496,26 @@ class Transformer_Dialog(Dialog):
         self.Io_label.setText('Io(%)')
         self.Io_label.setStyleSheet(self.label_style)
         self.Io_data = QLineEdit(self)
-        self.Io_data.move(200, 340)
+        self.Io_data.move(250, 340)
         self.Io_data.setPlaceholderText("请输入Io(%)")
         self.Io_data.setStyleSheet(self.text_style)
 
         self.U_start_label = QLabel(self)
         self.U_start_label.move(100, 400)
-        self.U_start_label.setText('U_start(kV)')
+        self.U_start_label.setText('U_start(KV)')
         self.U_start_label.setStyleSheet(self.label_style)
         self.U_start_data = QLineEdit(self)
-        self.U_start_data.move(200, 400)
-        self.U_start_data.setPlaceholderText("请输入U_start(kV)")
+        self.U_start_data.move(250, 400)
+        self.U_start_data.setPlaceholderText("请输入U_start(KV)")
         self.U_start_data.setStyleSheet(self.text_style)
 
         self.U_end_label = QLabel(self)
         self.U_end_label.move(100, 460)
-        self.U_end_label.setText('U_end(kV)')
+        self.U_end_label.setText('U_end(KV)')
         self.U_end_label.setStyleSheet(self.label_style)
         self.U_end_data = QLineEdit(self)
-        self.U_end_data.move(200, 460)
-        self.U_end_data.setPlaceholderText("请输入U_end(kV)")
+        self.U_end_data.move(250, 460)
+        self.U_end_data.setPlaceholderText("请输入U_end(KV)")
         self.U_end_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
@@ -620,7 +620,7 @@ class File_Dialog(Dialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = Wire_Dialog()
+    win = VA_Dialog()
     win.show()
     # print(win.tf_text)
     sys.exit(app.exec_())
