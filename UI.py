@@ -281,6 +281,13 @@ class MainWindow(QMainWindow):
 
         # menu bar
         # self.menu_bar = self.menuBar()
+        self.menu_bar.setStyleSheet('''
+        QMenuBar { background-color: rgb(49,49,49); color: rgb(255,255,255);  border: 0px solid ; font_family:JetBrains Mono;font-weight:bold;padding:6px 10px; }
+        QMenuBar:item { background-color: rgb(49,49,49); color: rgb(255,255,255);height: 30px}
+        QMenu:item:selected{background-color:#F5DEB3; color:rgb(49,49,49);}
+        QMenu:item{background-color:rgb(255,250,250); color:black; font_family:JetBrains Mono;font-weight:bold;padding:0px 0px; width: 230px;}
+         ''')
+        
         self.menu_bar.setNativeMenuBar(False)
         file_menu = self.menu_bar.addMenu('File')
         help_menu = self.menu_bar.addMenu('Help')
@@ -295,6 +302,9 @@ class MainWindow(QMainWindow):
 
         # tool bar
         # self.toolbar = self.addToolBar('Tools')
+        self.toolbar.setStyleSheet("""
+               QToolBar { background-color: rgb(49,49,49); color: rgb(255,255,255);  border: 0px solid ; }
+            """)
 
         # add actions to tool bar
         self.toolbar.addAction(add_v_theta_action)
