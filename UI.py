@@ -727,8 +727,8 @@ def run_algorithm(demo):
     print(bus_num)
     print(global_Y)
 
-    x = np.ones(node_sum, dtype=float) * factor / 2
-    accuracy = 1e-6
+    x = np.ones(node_sum, dtype=float) * factor
+    accuracy = 100000
     result = Newton(x, node_sum, accuracy, global_Y, bus_num, y_admittance)
     print("Newton: \n")
     print(result)
