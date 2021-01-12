@@ -25,8 +25,7 @@ class Dialog(QWidget):
         self.resize(450, 650)
         # self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowCloseButtonHint)  # 让放大框选项不可用
 
-
-        #设置窗口背景
+        # 设置窗口背景
         self.setWindowOpacity(0.9)  # 设置窗口透明度
         # self.setAttribute(QtCore.Qt.WA_TranslucentBackground) # 设置窗口背景透明
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # 隐藏所有边框
@@ -35,8 +34,7 @@ class Dialog(QWidget):
         self.pe.setColor(self.backgroundRole(), QColor(88, 87, 86))  # 设置背景色
         self.setPalette(self.pe)
 
-
-        #设置提示语画板
+        # 设置提示语画板
         QToolTip.setFont(QFont('JetBrain Mono', 9))
         self.tool_bgd = QToolTip.palette()
         self.tool_bgd.setColor(self.tool_bgd.Inactive, self.tool_bgd.ToolTipBase, QColor(3, 35, 14))
@@ -163,7 +161,20 @@ class PQ_Dialog(Dialog):
         self.set_button.clicked.connect(lambda: self.save_text())
 
     def save_text(self):
-        self.PQ_text = [self.P_data.text(), self.Q_data.text()]
+        P = 0
+        Q = 0
+        if self.P_data.text() != "":
+            try:
+                P = float(self.P_data.text())
+            except ValueError:
+                pass
+        if self.Q_data.text() != "":
+            try:
+                Q = float(self.Q_data.text())
+            except ValueError:
+                pass
+        self.PQ_text = [P, Q]
+        print(self.PQ_text)
         self.close()
 
 
@@ -199,7 +210,20 @@ class PV_Dialog(Dialog):
         self.show()
 
     def save_text(self):
-        self.PV_text = [self.P_data.text(), self.V_data.text()]
+        P = 0
+        V = 0
+        if self.P_data.text() != "":
+            try:
+                P = float(self.P_data.text())
+            except ValueError:
+                pass
+        if self.V_data.text() != "":
+            try:
+                V = float(self.V_data.text())
+            except ValueError:
+                pass
+        self.PV_text = [P, V]
+        print(self.PV_text)
         self.close()
 
 
@@ -235,7 +259,20 @@ class VA_Dialog(Dialog):
         self.show()
 
     def save_text(self):
-        self.VA_text = [self.V_data.text(), self.A_data.text()]
+        V = 0
+        A = 0
+        if self.V_data.text() != "":
+            try:
+                V = float(self.V_data.text())
+            except ValueError:
+                pass
+        if self.A_data.text() != "":
+            try:
+                A = float(self.A_data.text())
+            except ValueError:
+                pass
+        self.VA_text = [V, A]
+        print(self.VA_text)
         self.close()
 
 
@@ -334,11 +371,70 @@ class Wire_Dialog(Dialog):
         return self.selected_type_index
 
     def save_text(self):
-        self.wire_text = [self.type_select.currentIndex(), self.D1_data.text(), self.D2_data.text(),
-                          self.D3_data.text(),
-                          self.diameter_data.text(),
-                          self.line_distance_data.text(),
-                          self.length_data.text(), self.S_wire_data.text()]
+        the_type = 0
+        D1 = 0
+        D2 = 0
+        D3 = 0
+        diameter = 0
+        line_dist = 0
+        length = 0
+        S_wire = 0
+
+        if self.type_select.currentIndex() != "":
+            try:
+                the_type = float(self.type_select.currentIndex())
+            except ValueError:
+                pass
+
+        if self.D1_data.text() != "":
+            try:
+                D1 = float(self.D1_data.text())
+            except ValueError:
+                pass
+
+        if self.D2_data.text() != "":
+            try:
+                D2 = float(self.D2_data.text())
+            except ValueError:
+                pass
+
+        if self.D3_data.text() != "":
+            try:
+                D3 = float(self.D3_data.text())
+            except ValueError:
+                pass
+
+        if self.diameter_data.text() != "":
+            try:
+                diameter = float(self.diameter_data.text())
+            except ValueError:
+                pass
+
+        if self.line_distance_data.text() != "":
+            try:
+                line_dist = float(self.line_distance_data.text())
+            except ValueError:
+                pass
+
+        if self.length_data.text() != "":
+            try:
+                length = float(self.length_data.text())
+            except ValueError:
+                pass
+
+        if self.S_wire_data.text() != "":
+            try:
+                S_wire = float(self.S_wire_data.text())
+            except ValueError:
+                pass
+
+        # self.wire_text = [self.type_select.currentIndex(), self.D1_data.text(), self.D2_data.text(),
+        #                   self.D3_data.text(),
+        #                   self.diameter_data.text(),
+        #                   self.line_distance_data.text(),
+        #                   self.length_data.text(), self.S_wire_data.text()]
+        self.wire_text = [the_type, D1, D2, D3, diameter, line_dist, length, S_wire]
+        print(self.wire_text)
         self.close()
 
 
@@ -402,24 +498,6 @@ class Transformer_Dialog(Dialog):
         self.Io_data.setPlaceholderText("请输入Io(%)")
         self.Io_data.setStyleSheet(self.text_style)
 
-        # self.Uh_label = QLabel(self)
-        # self.Uh_label.move(100, 400)
-        # self.Uh_label.setText('Uh(kV)')
-        # self.Uh_label.setStyleSheet(self.label_style)
-        # self.Uh_data = QLineEdit(self)
-        # self.Uh_data.move(200, 400)
-        # self.Uh_data.setPlaceholderText("请输入Uh(kV)")
-        # self.Uh_data.setStyleSheet(self.text_style)
-        #
-        # self.Ul_label = QLabel(self)
-        # self.Ul_label.move(100, 460)
-        # self.Ul_label.setText('Ul(kV)')
-        # self.Ul_label.setStyleSheet(self.label_style)
-        # self.Ul_data = QLineEdit(self)
-        # self.Ul_data.move(200, 460)
-        # self.Ul_data.setPlaceholderText("请输入Ul(kV)")
-        # self.Ul_data.setStyleSheet(self.text_style)
-
         self.U_start_label = QLabel(self)
         self.U_start_label.move(100, 400)
         self.U_start_label.setText('U_start(kV)')
@@ -442,13 +520,63 @@ class Transformer_Dialog(Dialog):
         # self.show()
 
     def save_text(self):
-        Sn = float(self.Sn_data.text())
-        Pk = float(self.Pk_data.text())
-        Uk = float(self.Uk_data.text())
-        Po = float(self.Po_data.text())
-        Io = float(self.Io_data.text())
-        U_start = float(self.U_start_data.text())
-        U_end = float(self.U_end_data.text())
+        Sn = 0
+        Pk = 0
+        Uk = 0
+        Po = 0
+        Io = 0
+        U_start = 0
+        U_end = 0
+
+        if self.Sn_data.text() != "":
+            try:
+                Sn = float(self.Sn_data.text())
+            except ValueError:
+                pass
+
+        if self.Pk_data.text() != "":
+            try:
+                Pk = float(self.Pk_data.text())
+            except ValueError:
+                pass
+
+        if self.Sn_data.text() != "":
+            try:
+                Uk = float(self.Uk_data.text())
+            except ValueError:
+                pass
+
+        if self.Sn_data.text() != "":
+            try:
+                Po = float(self.Po_data.text())
+            except ValueError:
+                pass
+
+        if self.Sn_data.text() != "":
+            try:
+                Io = float(self.Io_data.text())
+            except ValueError:
+                pass
+
+        if self.Sn_data.text() != "":
+            try:
+                U_start = float(self.U_start_data.text())
+            except ValueError:
+                pass
+
+        if self.Sn_data.text() != "":
+            try:
+                U_end = float(self.U_end_data.text())
+            except ValueError:
+                pass
+
+        # Sn = float(self.Sn_data.text())
+        # Pk = float(self.Pk_data.text())
+        # Uk = float(self.Uk_data.text())
+        # Po = float(self.Po_data.text())
+        # Io = float(self.Io_data.text())
+        # U_start = float(self.U_start_data.text())
+        # U_end = float(self.U_end_data.text())
         if U_start > U_end:
             Uh = U_start
             Ul = U_end
@@ -486,6 +614,7 @@ class File_Dialog(Dialog):
 
         self.set_button.clicked.connect(self.close())
         self.show_dialog()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
