@@ -290,7 +290,7 @@ class Wire_Dialog(Dialog):
 
         self.type_label = QLabel(self)
         self.type_label.move(100, 100)
-        self.type_label.setText('Type')
+        self.type_label.setText('类型')
         self.type_label.setStyleSheet(self.label_style)
         self.type_select = QComboBox(self)
         self.type_select.move(300, 100)
