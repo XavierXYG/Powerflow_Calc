@@ -43,9 +43,9 @@ def PQ_ef_coefficient(admittance_matrix, PQ_PV, BusNum):  # get the coefficient 
                                              Global_input[2 * i + 1] * y_temp_real[i][k] - Global_input[2 * i] *
                                              y_temp_imag[i][k]) \
                                  * Global_input[2 * k]  # Q_pq coefficient
-        PQ_bus[2 * i] -= PQ_PV[i][0]  # P_pq coefficient - P(value from UI )
-        PQ_bus[2 * i + 1] -= PQ_PV[i][1]  # Q_pq coefficient - Q(value from UI )
-    return PQ_bus  # P1, Q1, P2, Q2... coefficient
+        PQ_bus[2 * i] += PQ_PV[i][0]  # P_pq coefficient - P(value from UI )
+        PQ_bus[2 * i + 1] += PQ_PV[i][1]  # Q_pq coefficient - Q(value from UI )
+    return PQ_bus   # P1, Q1, P2, Q2... coefficient
 
 
 def PV_ef_coefficient(admittance_matrix, PQ_PV, BusNum):  # get the coefficient of PV_bus
@@ -73,7 +73,7 @@ def PV_ef_coefficient(admittance_matrix, PQ_PV, BusNum):  # get the coefficient 
                                          y_temp_imag[i + size_PQ][k]) * Global_input[2 * k + 1]  # P_pv coefficient
         PV_bus[2 * i + 1] = Global_input[2 * (i + size_PQ)] ** 2 + Global_input[
             2 * (i + size_PQ) + 1] ** 2  # V_pv coefficient
-        PV_bus[2 * i] -= PQ_PV[size_PQ + i][0]  # P_pv coefficient - P(value from UI )
+        PV_bus[2 * i] += PQ_PV[size_PQ + i][0]  # P_pv coefficient - P(value from UI )
         PV_bus[2 * i + 1] -= (PQ_PV[size_PQ + i][1]) ** 2  # V_pv coefficient - V**2(value from UI )
     return PV_bus  # P1, V1, P2, V2... coefficient
 
@@ -93,14 +93,14 @@ def VA_ef_coefficient(PQ_PV, BusNum):  # get the coefficient of VA_bus
         VA_bus[2 * i + 1] = getGlobal_X(num)[num - size_VA * 2 + 1] - f_VA
     return VA_bus  # e_VA1, f_VA1, e_VA2, e_VA2... coefficient
 
-#
-# if __name__ == "__main__":
-#     admittance_matrix = np.array([[0.12 - 0.16j, -0.12 + 0.16j],
-#                                   [-0.12 + 0.16j, 0.12 - 0.16j]])
-#     PQ_PV = np.array([[10000000, 20000000],
-#                       [242000, 0]])
-#     busnum = [1, 0, 1]
-#     PQ_coefficient = PQ_ef_coefficient(admittance_matrix, PQ_PV, BusNum=busnum)
-#     PV_coefficient = PV_ef_coefficient(admittance_matrix, PQ_PV, BusNum=busnum)
-#     VA_coefficient = VA_ef_coefficient(PQ_PV, BusNum=busnum)
-#     print(PQ_coefficient, PV_coefficient, VA_coefficient)
+
+if __name__ == "__main__":
+    admittance_matrix = np.array([[0.12 - 0.16j, -0.12 + 0.16j],
+                                  [-0.12 + 0.16j, 0.12 - 0.16j]])
+    PQ_PV = np.array([[10000000, 20000000],
+                      [242000, 0]])
+    busnum = [1, 0, 1]
+    PQ_coefficient = PQ_ef_coefficient(admittance_matrix, PQ_PV, BusNum=busnum)
+    PV_coefficient = PV_ef_coefficient(admittance_matrix, PQ_PV, BusNum=busnum)
+    VA_coefficient = VA_ef_coefficient(PQ_PV, BusNum=busnum)
+    print(PQ_coefficient, PV_coefficient, VA_coefficient)
