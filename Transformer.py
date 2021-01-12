@@ -139,6 +139,9 @@ class Network:
                     k = self.Un_ / ((self.bus_[i].previous_level_ + self.bus_[j].previous_level_) * 0.5)
                     self.adj_[i, j] /= k ** 2
 
+    def U_init(self):
+        return self.Un_
+
     def transform(self):
         self.construct_graph()
         self.graph_BFS()

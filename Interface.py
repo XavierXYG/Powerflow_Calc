@@ -1,12 +1,12 @@
-from sympy import Matrix, lambdify, exp
-import numpy as np
+from sympy import Matrix, lambdify
 from Global_X import Global_X
 from U_Coefficient import *
-import math
+from main import y_admittance
 
-admittance_matrix = np.array([[0.12 - 0.16j, -0.12 + 0.16j],
-                              [-0.12 + 0.16j, 0.12 - 0.16j]])
-Global_Y = np.array([[10000000, 20000000], [242000, 0]])
+admittance_matrix = y_admittance
+    # np.array([[0.12 - 0.16j, -0.12 + 0.16j],
+    #                           [-0.12 + 0.16j, 0.12 - 0.16j]])
+Global_Y = np.array([[10000000, 20000000], [242000, 0]]) #UI
 BusNum = [1, 0, 1]
 
 
