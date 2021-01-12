@@ -562,16 +562,17 @@ class GraphicView(QGraphicsView):
 
     # override
     def keyPressEvent(self, event):
-        # 当按下N键时，会在scene的（0,0）位置出现此图元
-        if event.key() == Qt.Key_N:
-            self.addNodeHandle('VTheta')
-
-        # 当按下E键时，启动线条功能，再次按下则是关闭
-        if event.key() == Qt.Key_E:
-            self.addEdgeHandle('TL')
-
-        if event.key() == Qt.Key_Escape:
-            self.edge_enable = False
+        pass
+        # # 当按下N键时，会在scene的（0,0）位置出现此图元
+        # if event.key() == Qt.Key_N:
+        #     self.addNodeHandle('VTheta')
+        #
+        # # 当按下E键时，启动线条功能，再次按下则是关闭
+        # if event.key() == Qt.Key_E:
+        #     self.addEdgeHandle('TL')
+        #
+        # if event.key() == Qt.Key_Escape:
+        #     self.edge_enable = False
 
     # override
     def mousePressEvent(self, event):

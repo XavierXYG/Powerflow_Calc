@@ -79,6 +79,10 @@ class GraphicEdge(QGraphicsPathItem):
 
         self._pen = QPen(QColor("#000"))  # 画线条的
         self._pen.setWidthF(self.width)
+        if self.type == "TF":
+            self._pen.setStyle(Qt.DashDotLine)
+        else:
+            self._pen.setStyle(Qt.SolidLine)
 
         self._pen_dragging = QPen(QColor("#000"))  # 画拖拽线条时线条的
         self._pen_dragging.setStyle(Qt.DashDotLine)
