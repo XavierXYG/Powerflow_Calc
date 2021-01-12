@@ -13,13 +13,22 @@ from PyQt5.QtGui import QPixmap, QPainterPath
 from Edge import *
 from Node import *
 from Dialog import *
-from Transformer import Transformer
+from Transformer import *
 from Calculate_Distance import calculate_distance
+
+from Get_Wire_Para import Admittance_wire
+from Get_Admittance import get_admittance_matrix
+from Newton import Newton
+from Global_X import *
+from Calculate_S import power_flow
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.active = True
+
         self.status_bar = self.statusBar()
         self.menu_bar = self.menuBar()
         self.toolbar = self.addToolBar('Tools')
@@ -213,9 +222,6 @@ class MainWindow(QMainWindow):
         self.view.selected_edge_type = 'TL'
         self.view.addEdgeHandle('TL')
 
-    def calculate_result(self):
-        pass
-
     def initWindow(self):
         # ---- Menu Bar Actions ----
         # add
@@ -336,7 +342,7 @@ class MainWindow(QMainWindow):
         return [len(self.PQ_nodes), len(self.PV_nodes), len(self.VTheta_nodes)]
 
     def getNodeSum(self):
-        return 2 * sum(self.getNodeTypeNum())
+        return 2 * sum(self.getNodeTypeNumList())
 
     def getGlobal_Y(self):
         self.global_Y = []
@@ -360,6 +366,9 @@ class MainWindow(QMainWindow):
                                  edge.data_dialog.tf_text[6], edge.data_dialog.tf_text[7], edge.data_dialog.tf_text[8])
                 tf_list.append(tf)
         return tf_list
+
+    def calculate_result(self):
+        run_algorithm(self)
 
 
 class GraphicScene(QGraphicsScene):
@@ -445,6 +454,8 @@ class GraphicScene(QGraphicsScene):
         painter.setPen(self._pen_dark)
         if lines_dark:
             painter.drawLines(*lines_dark)
+
+
 
 
 class GraphicView(QGraphicsView):
@@ -542,6 +553,8 @@ class GraphicView(QGraphicsView):
             # 终点图元不能是起点图元，即无环图
             if isinstance(item, GraphicItem) and item is not self.drag_start_item:
                 self.edge_drag_end(self.enabled_edge_type, item)
+            elif item is None:
+                pass
             else:
                 self.drag_edge.remove()
                 self.drag_edge = None
@@ -619,6 +632,45 @@ class GraphicView(QGraphicsView):
 #     def getNodeIndex(self):
 #         return self.scene().nodes.index(self)
 
+def run_algorithm(demo):
+
+    print("0")
+    temp_Topology = Admittance_wire(demo.scene.nodes, demo.scene)
+
+    print("1")
+    transformer_list = demo.getTransformers()
+
+    print("2")
+    network_1 = Network(temp_Topology, transformer_list)
+
+    print("3")
+    Topology = network_1.transform()
+
+    print("4")
+    y_admittance = get_admittance_matrix(Topology)
+
+    print("5")
+    factor = 220000
+    if len(network_1.tfs_):
+        factor = network_1.U_init()
+    else:
+        for node in demo.scene.nodes:
+            if node.type == "VTheta":
+                factor = node.data_dialog.VA_text[0]
+                break
+    print("6")
+    node_sum = demo.getNodeSum()
+    bus_num = demo.getNodeTypeNumList()
+    global_Y = demo.getGlobal_Y()
+    x = np.ones(bus_num, dtype=float) * factor
+    accuracy = 1e-6
+    result = Newton(x, node_sum, accuracy, global_Y, bus_num, y_admittance)
+    print("Newton: \n")
+    print(result)
+
+    print("7")
+    print("Power Flow: \n")
+    print(power_flow(result, y_admittance, demo.scene.nodes, demo.scene))
 
 def demo_run():
     app = QApplication(sys.argv)

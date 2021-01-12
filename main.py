@@ -22,6 +22,8 @@
 #     def get_transformer(Un, Sn, Pk, Uk, Io, Po, ratio):  # Un,Sn,Pk,Uk%,Io%,Po,ratio
 #         pass
 
+import time
+
 from Get_Wire_Para import Admittance_wire
 from UI import *
 from Transformer import *
@@ -35,19 +37,19 @@ from Calculate_S import power_flow
 
 # global_Y=list() #global_Y 用做牛顿迭代法中的Y=F(X)
 
-class BUS_PQ:
-    def __init__(self, P, Q, position):
-        pass
-
-
-class BUS_PV:
-    def __init__(self, P, V, position):
-        pass
-
-
-class BUS_Vtheta:
-    def __init__(self, V, theta, position):
-        pass
+# class BUS_PQ:
+#     def __init__(self, P, Q, position):
+#         pass
+#
+#
+# class BUS_PV:
+#     def __init__(self, P, V, position):
+#         pass
+#
+#
+# class BUS_Vtheta:
+#     def __init__(self, V, theta, position):
+#         pass
 
 
 # type 1:cu+n=1+S=300mm2
@@ -126,6 +128,6 @@ if __name__ == "__main__":
 
     # 有电压以后算功率流
     print("Power Flow: \n")
-    print(power_flow(result, y_admittance))
+    print(power_flow(result, y_admittance, demo.scene.nodes, demo.scene))
 
     sys.exit(app.exec_())

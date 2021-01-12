@@ -1,11 +1,7 @@
-from UI import *
-from Edge import Edge
-
-
 def link_vex(node1, node2, scene):
     for edge in scene.edges:
-        start_node = edge.edge_wrap.start_item
-        end_node = edge.edge_wrap.end_item
+        start_node = edge.start_item
+        end_node = edge.end_item
         if node1 == start_node:
             if node2 == end_node:
                 return True
@@ -17,8 +13,8 @@ def link_vex(node1, node2, scene):
 
 def link_edge(node1, node2, scene):
     for edge in scene.edges:
-        start_node = edge.edge_wrap.start_item
-        end_node = edge.edge_wrap.end_item
+        start_node = edge.start_item
+        end_node = edge.end_item
         if node1 == start_node:
             if node2 == end_node:
                 return edge

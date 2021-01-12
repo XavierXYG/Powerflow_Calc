@@ -1,51 +1,110 @@
 Nodes:
 Node Index:0
 Node Type:VTheta
-x = 263.0
-y = 339.0
-V = 1
-Theta = 2
+x = 183.0
+y = 329.0
+V = 242000.0
+Theta = 0.0
 Node Index:1
-Node Type:PV
-x = 267.0
-y = 643.0
-P = 3
-V = 4
+Node Type:PQ
+x = 495.0
+y = 334.0
+P = 0
+Q = -20000000.0
 Node Index:2
 Node Type:PQ
-x = 600.0
-y = 465.0
-P = 5
-Q = 6
+x = 718.0
+y = 344.0
+P = 80000000.0
+Q = 100000000.0
+Node Index:3
+Node Type:PQ
+x = 642.0
+y = 622.0
+P = 50000000.0
+Q = 50000000.0
+Node Index:4
+Node Type:PQ
+x = 357.0
+y = 612.0
+P = 30000000.0
+Q = -20000000.0
 Edges:
 Edge Index:0
-Edge Type:TF
-starting point: 
-x = 313.0
-y = 389.0
-ending point: 
-x = 317.0
-y = 693.0
-Sn = a
-Pk = b
-Uk = c
-Po = d
-Io = e
-Uh = f
-Ul = g
-Edge Index:1
 Edge Type:TL
 starting point: 
-x = 317.0
-y = 693.0
+x = 233.0
+y = 379.0
 ending point: 
-x = 650.0
-y = 515.0
-type = 0
-D1 = 2
-D2 = 3
-D3 = 4
-Diameter = 5
-Line Distance = 6
-Length = 7
-S_Wire = 8
+x = 545.0
+y = 384.0
+type = 3.0
+D1 = 15000.0
+D2 = 15000.0
+D3 = 30000.0
+Diameter = 24.26
+Line Distance = 0.0
+Length = 200.0
+S_Wire = 300.0
+Edge Index:1
+Edge Type:TF
+starting point: 
+x = 545.0
+y = 384.0
+ending point: 
+x = 768.0
+y = 394.0
+Sn = 400.0
+Pk = 500.0
+Uk = 5.0
+Po = 100.0
+Io = 2.0
+Uh = 231.0
+Ul = 121.0
+Edge Index:2
+Edge Type:TL
+starting point: 
+x = 768.0
+y = 394.0
+ending point: 
+x = 692.0
+y = 672.0
+type = 3.0
+D1 = 15000.0
+D2 = 15000.0
+D3 = 30000.0
+Diameter = 24.26
+Line Distance = 0.0
+Length = 250.0
+S_Wire = 300.0
+Edge Index:3
+Edge Type:TF
+starting point: 
+x = 692.0
+y = 672.0
+ending point: 
+x = 407.0
+y = 662.0
+Sn = 400.0
+Pk = 500.0
+Uk = 5.0
+Po = 100.0
+Io = 2.0
+Uh = 231.0
+Ul = 110.0
+Edge Index:4
+Edge Type:TL
+starting point: 
+x = 233.0
+y = 379.0
+ending point: 
+x = 407.0
+y = 662.0
+type = 3.0
+D1 = 15000.0
+D2 = 15000.0
+D3 = 30000.0
+Diameter = 24.26
+Line Distance = 0.0
+Length = 200.0
+S_Wire = 300.0

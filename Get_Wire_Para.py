@@ -1,7 +1,7 @@
 import math
 import numpy
 from UI_Interface import link_vex, link_edge
-from UI import GraphicScene
+# from UI import GraphicScene
 
 
 def r_1(diameter, line_distance=0):
