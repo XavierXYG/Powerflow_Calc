@@ -22,8 +22,16 @@
 #     def get_transformer(Un, Sn, Pk, Uk, Io, Po, ratio):  # Un,Sn,Pk,Uk%,Io%,Po,ratio
 #         pass
 
-#定义全局变量
-Topology=[[]]
+from Get_Wire_Para import *
+from UI import *
+from Transformer import *
+from Get_Admittance import  *
+from Newton import *
+from Global_X import *
+from Calculate_S import *
+
+#定义全局变量Topology=[[]]
+
 global_Y=list() #global_Y 用做牛顿迭代法中的Y=F(X)
 
 class BUS_PQ:
@@ -42,6 +50,7 @@ class BUS_Vtheta:
 #def get_wire(type, Da, Db, Dc, diameter, line_distance, length, S_wire):#(材料，股数)，Dm，导线直径，分裂线距离，导线长度, 导体横截面积
     #pass
 
+'''
 def get_transformer(Un,Sn,Pk,Uk,Io,Po,ratio):#Un,Sn,Pk,Uk%,Io%,Po,ratio
     pass
 
@@ -65,3 +74,43 @@ def Newton(x, num, accuracy): #x是初始e、f给的值，需要初始化为1
 
 def calculate_S():
     pass
+'''
+if __name__ == "__main__":
+
+
+    # demo run
+    app = QApplication(sys.argv)
+    demo = MainWindow()
+    # 适配 Retina 显示屏（选写）.
+    app.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+    app.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    # ----------------------------------
+    demo.show()
+
+    # Admittance
+    # size_n = len(demo.scene.nodes)
+    size_n=3
+    Admittance_bus(size_n, type=4, Da=8,Db=8,Dc=16, diameter=33.6, line_distance=0, length=20, S_wire=630)
+
+
+    # Transformer
+    #tf1 = Transformer(400, 500, 5, 100, 2, 231, 121, 1, 2)
+    #tf2 = Transformer(400, 500, 5, 100, 2, 231, 110, 4, 3)
+
+    # network_1 = Network(Topology, tf1, tf2)
+    network_1 = Network(Topology)
+    Topology = network_1.transform()
+    y_admittance = get_admittance_matrix(Topology)
+
+    # 列方程 解方程???     y矩阵怎么送到Newton里面的？x与global-X有什么关系
+    factor=network_1.U_init()
+    x=np.ones(4, dtype=float) * factor
+    accuracy = 1e-6
+    Newton(x, num, accuracy)
+
+    #有电压以后算功率流
+    power_flow(Global_X, y_admittance)
+
+    '''
+    sys.exit(app.exec_())
+    '''
