@@ -8,12 +8,12 @@ Created on Fri Jan  1 21:03:21 2021
 import numpy as np
 from numpy import *
 from Interface import Interface
-from Global_X import num
 from sympy import Matrix, lambdify, symbols, Lambda
 
 
+
 # 计算雅可比矩阵的逆矩阵
-def dfun(x, num):
+def dfun(x, num, Global_Y, BusNum, admittance_matrix):
     df = np.zeros((num, num), dtype=float)
     dx = 0.00001  # 差分精度
     x1 = np.copy(x)
@@ -21,19 +21,19 @@ def dfun(x, num):
         for j in range(0, num):
             x1 = np.copy(x)
             x1[j] = x1[j] + dx  # x+dx
-            a = (Interface(x1)[i][0] - Interface(x)[i][0]) / dx  # f(x+dx)-f（x）/dx
+            a = (Interface(x1, Global_Y, BusNum, admittance_matrix)[i][0] - Interface(x, Global_Y, BusNum, admittance_matrix)[i][0]) / dx  # f(x+dx)-f（x）/dx
             df[i, j] = a
     df_1 = np.linalg.inv(df)  # 计算逆矩阵
     return df_1
 
 
-def Newton(x, num, accuracy=1e-6):
+def Newton(x, num, accuracy, Global_Y, BusNum, admittance_matrix):
     x1 = np.copy(x)
     i = 0
     delta = np.copy(x)
     while np.sum(abs(delta)) > accuracy and i < 500:  # 控制循环次数
-        test = Interface(x).squeeze()
-        x1 = x - dot(dfun(x, num), test.T)  # 公式
+        squeezed_x = Interface(x, Global_Y, BusNum, admittance_matrix).squeeze()
+        x1 = x - dot(dfun(x, num, Global_Y, BusNum, admittance_matrix), squeezed_x.T)  # 公式
         delta = x1 - x  # 比较x的变化
         x = x1
         i = i + 1

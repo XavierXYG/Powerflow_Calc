@@ -6,6 +6,8 @@ import math
 import queue
 
 
+# from Get_Wire_Para import temp_Topology
+
 class Transformer:
     def __init__(self, Sn, Pk, Uk, Po, Io, Uh, Ul, hn, ln):  # Sn(MVA),Pk(kW),Uk(%),Po(kW),Io(%),Uh(kV),Ul(kV)
         self.direction = 0  # case 1: Un = Uh; case 0: Un = Ul
@@ -38,8 +40,8 @@ class Bus:
 
 
 class Network:
-    def __init__(self, topology, *args):
-        self.tfs_ = args
+    def __init__(self, topology, tfs):
+        self.tfs_ = tfs
         self.bus_ = []
         self.adj_ = topology
         self.Un_ = 0
@@ -143,8 +145,11 @@ class Network:
         return self.Un_
 
     def transform(self):
-        self.construct_graph()
-        self.graph_BFS()
+        if len(self.tfs_):
+            self.construct_graph()
+            self.graph_BFS()
+        else:
+            pass
         return self.adj_
 
 
@@ -155,11 +160,11 @@ Topology = np.array([[0, complex(21, 95.4), 0, 0, 21 + 95.4j],
                      [0, 0, 105.9 + 481.2j, 0, 0],
                      [21 + 95.4j, 0, 0, 0, 0]], dtype=complex)
 
-# local test
-if __name__ == '__main__':
-    tf1 = Transformer(400, 500, 5, 100, 2, 231, 121, 1, 2)
-    tf2 = Transformer(400, 500, 5, 100, 2, 231, 110, 4, 3)
-
-    network_1 = Network(Topology, tf1, tf2)
-    Topology = network_1.transform()
-    print(Topology)
+# # local test
+# if __name__ == '__main__':
+#     tf1 = Transformer(400, 500, 5, 100, 2, 231, 121, 1, 2)
+#     tf2 = Transformer(400, 500, 5, 100, 2, 231, 110, 4, 3)
+#
+#     network_1 = Network(Topology, list(tf1,tf2))
+#     Topology = network_1.transform()
+#     print(Topology)

@@ -1,6 +1,5 @@
 import math
 import numpy
-from main import demo
 from UI_Interface import link_vex, link_edge
 from UI import GraphicScene
 
@@ -185,29 +184,29 @@ def get_wire(type, Da, Db, Dc, diameter, line_distance, length, S_wire):
         return [yij, yi0, yj0]
 
 
-def Admittance_wire(nodes):  # type, Da, Db, Dc, diameter, line_distance, length, S_wire
+def Admittance_wire(nodes, scene):  # type, Da, Db, Dc, diameter, line_distance, length, S_wire
     node_num = len(nodes)
     Topology = numpy.zeros((node_num, node_num), dtype=numpy.complex_)
     for i in range(0, node_num):
         for j in range(0, node_num):
-            if link_vex(nodes[i], nodes[j], demo.scene):
-                temp_gr_edge = link_edge(nodes[i], nodes[j], demo.scene)
-                Topology[i][j] = get_wire(temp_gr_edge.data_dialog.wire_text[0], temp_gr_edge.data_dialog.wire_text[1],
-                                          temp_gr_edge.data_dialog.wire_text[2], temp_gr_edge.data_dialog.wire_text[3],
-                                          temp_gr_edge.data_dialog.wire_text[4], temp_gr_edge.data_dialog.wire_text[5])[
+            if link_vex(nodes[i], nodes[j], scene):
+                temp_edge = link_edge(nodes[i], nodes[j], scene)
+                Topology[i][j] = get_wire(temp_edge.data_dialog.wire_text[0], temp_edge.data_dialog.wire_text[1],
+                                          temp_edge.data_dialog.wire_text[2], temp_edge.data_dialog.wire_text[3],
+                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5])[
                     0]
-                Topology[i][i] = get_wire(temp_gr_edge.data_dialog.wire_text[0], temp_gr_edge.data_dialog.wire_text[1],
-                                          temp_gr_edge.data_dialog.wire_text[2], temp_gr_edge.data_dialog.wire_text[3],
-                                          temp_gr_edge.data_dialog.wire_text[4], temp_gr_edge.data_dialog.wire_text[5])[
+                Topology[i][i] = get_wire(temp_edge.data_dialog.wire_text[0], temp_edge.data_dialog.wire_text[1],
+                                          temp_edge.data_dialog.wire_text[2], temp_edge.data_dialog.wire_text[3],
+                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5])[
                     1]
-                Topology[j][j] = get_wire(temp_gr_edge.data_dialog.wire_text[0], temp_gr_edge.data_dialog.wire_text[1],
-                                          temp_gr_edge.data_dialog.wire_text[2], temp_gr_edge.data_dialog.wire_text[3],
-                                          temp_gr_edge.data_dialog.wire_text[4], temp_gr_edge.data_dialog.wire_text[5])[
+                Topology[j][j] = get_wire(temp_edge.data_dialog.wire_text[0], temp_edge.data_dialog.wire_text[1],
+                                          temp_edge.data_dialog.wire_text[2], temp_edge.data_dialog.wire_text[3],
+                                          temp_edge.data_dialog.wire_text[4], temp_edge.data_dialog.wire_text[5])[
                     2]
     return Topology
 
 
-temp_Topology = Admittance_wire(demo.scene.nodes)
+# temp_Topology = Admittance_wire(demo.scene.nodes)
 
 '''
 if __name__ == '__main__':

@@ -126,7 +126,7 @@ class Dialog(QWidget):
     def ok_clicked(self):
         pass
 
-    def cancel_clicked(self):  #
+    def cancel_clicked(self):
         self.close()
 
     def show_dialog(self):
@@ -343,8 +343,12 @@ class Wire_Dialog(Dialog):
 
 
 class Transformer_Dialog(Dialog):
-    def __init__(self, parent=None):
+    def __init__(self, start_index, end_index, parent=None):
         super().__init__(parent)
+
+        self.start_index = start_index
+        self.end_index = end_index
+
         self.setWindowTitle('Set Transformer Parameters')
         self.resize(550, 600)
 
@@ -398,58 +402,90 @@ class Transformer_Dialog(Dialog):
         self.Io_data.setPlaceholderText("请输入Io(%)")
         self.Io_data.setStyleSheet(self.text_style)
 
-        self.Uh_label = QLabel(self)
-        self.Uh_label.move(100, 400)
-        self.Uh_label.setText('Uh(kV)')
-        self.Uh_label.setStyleSheet(self.label_style)
-        self.Uh_data = QLineEdit(self)
-        self.Uh_data.move(200, 400)
-        self.Uh_data.setPlaceholderText("请输入Uh(kV)")
-        self.Uh_data.setStyleSheet(self.text_style)
+        # self.Uh_label = QLabel(self)
+        # self.Uh_label.move(100, 400)
+        # self.Uh_label.setText('Uh(kV)')
+        # self.Uh_label.setStyleSheet(self.label_style)
+        # self.Uh_data = QLineEdit(self)
+        # self.Uh_data.move(200, 400)
+        # self.Uh_data.setPlaceholderText("请输入Uh(kV)")
+        # self.Uh_data.setStyleSheet(self.text_style)
+        #
+        # self.Ul_label = QLabel(self)
+        # self.Ul_label.move(100, 460)
+        # self.Ul_label.setText('Ul(kV)')
+        # self.Ul_label.setStyleSheet(self.label_style)
+        # self.Ul_data = QLineEdit(self)
+        # self.Ul_data.move(200, 460)
+        # self.Ul_data.setPlaceholderText("请输入Ul(kV)")
+        # self.Ul_data.setStyleSheet(self.text_style)
 
-        self.Ul_label = QLabel(self)
-        self.Ul_label.move(100, 460)
-        self.Ul_label.setText('Ul(kV)')
-        self.Ul_label.setStyleSheet(self.label_style)
-        self.Ul_data = QLineEdit(self)
-        self.Ul_data.move(200, 460)
-        self.Ul_data.setPlaceholderText("请输入Ul(kV)")
-        self.Ul_data.setStyleSheet(self.text_style)
+        self.U_start_label = QLabel(self)
+        self.U_start_label.move(100, 400)
+        self.U_start_label.setText('U_start(kV)')
+        self.U_start_label.setStyleSheet(self.label_style)
+        self.U_start_data = QLineEdit(self)
+        self.U_start_data.move(200, 400)
+        self.U_start_data.setPlaceholderText("请输入U_start(kV)")
+        self.U_start_data.setStyleSheet(self.text_style)
+
+        self.U_end_label = QLabel(self)
+        self.U_end_label.move(100, 460)
+        self.U_end_label.setText('U_end(kV)')
+        self.U_end_label.setStyleSheet(self.label_style)
+        self.U_end_data = QLineEdit(self)
+        self.U_end_data.move(200, 460)
+        self.U_end_data.setPlaceholderText("请输入U_end(kV)")
+        self.U_end_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
         # self.show()
 
     def save_text(self):
-        self.tf_text = [self.Sn_data.text(), self.Pk_data.text(), self.Uk_data.text(), self.Po_data.text(),
-                        self.Io_data.text(), self.Uh_data.text(), self.Ul_data.text()]
-        # print(self.tf_text)
+        Sn = float(self.Sn_data.text())
+        Pk = float(self.Pk_data.text())
+        Uk = float(self.Uk_data.text())
+        Po = float(self.Po_data.text())
+        Io = float(self.Io_data.text())
+        U_start = float(self.U_start_data.text())
+        U_end = float(self.U_end_data.text())
+        if U_start > U_end:
+            Uh = U_start
+            Ul = U_end
+            Uh_index = self.start_index
+            Ul_index = self.end_index
+        else:
+            Uh = U_end
+            Ul = U_start
+            Uh_index = self.end_index
+            Ul_index = self.start_index
+
+        self.tf_text = [Sn, Pk, Uk, Po, Io, Uh, Ul, Uh_index, Ul_index]
+        print(self.tf_text)
         self.close()
 
 
 class File_Dialog(Dialog):
-    def __init__(self, parent=None):
+    def __init__(self, mode, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Set Transformer Parameters')
-        self.resize(550, 600)
-        self.file_name = ""
-        self.set_button.move(350, 550)
-        self.cancel_button.move(450, 550)
-
         self.Name_label = QLabel(self)
         self.Name_label.move(100, 100)
-        self.Name_label.setText('Sn(MVA)')
+        if mode == "save":
+            self.setWindowTitle('Saving File')
+            self.Name_label.setText('Save in file "back_up.txt"')
+        elif mode == "load":
+            self.setWindowTitle('Loading File')
+            self.Name_label.setText('Load in file "back_up.txt"')
+        else:
+            print("Error! invalid mode for file_dialog!")
+
+        self.resize(550, 600)
+        self.set_button.move(350, 550)
+
         self.Name_label.setStyleSheet(self.label_style)
-        self.File_name = QLineEdit(self)
-        self.File_name.move(200, 100)
-        self.File_name.setPlaceholderText("请输入文件名称")
-        self.File_name.setStyleSheet(self.text_style)
 
-        self.set_button.clicked.connect(lambda: self.save_text())
-
-    def save_text(self):
-        self.file_name = self.File_name.text()
-        print(self.file_name)
-        self.close()
+        self.set_button.clicked.connect(self.close())
+        self.show_dialog()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

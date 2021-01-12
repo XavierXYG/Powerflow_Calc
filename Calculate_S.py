@@ -1,20 +1,21 @@
 import math
 import numpy
+from UI_Interface import link_vex
 
-def power_flow(U_matrix, admittance_matrix):
+def power_flow(U_matrix, admittance_matrix,nodes, scene):
     size_n = int(numpy.array(U_matrix).shape[0] /2)
     S_Topology = numpy.zeros((size_n, size_n), dtype=numpy.complex_)
     delta_S_Topology = numpy.zeros((size_n, size_n), dtype=numpy.complex_)
     y_gnd = numpy.sum(admittance_matrix, axis=1)
     for i in range(0, size_n):
         for j in range(0,size_n):
-            if (link_vex()):
+            if link_vex(nodes[i], nodes[j], scene):
                 ui = complex(U_matrix[2*i], U_matrix[2*i + 1])
                 uj = complex(U_matrix[2*j], U_matrix[2*j + 1])
                 yi0 = y_gnd[i]
                 yj0 = y_gnd[j]
                 yij = (0 + 0j) - admittance_matrix[i][j]
-                if i==j:
+                if i == j:
                     S_Topology[i][i] = 0
                     delta_S_Topology[i][i] = ui*ui.conjugate()*yi0.conjugate()                #delta [i][i] calculate the delta S to ground(yi0)
                 else:

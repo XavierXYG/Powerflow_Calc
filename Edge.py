@@ -23,8 +23,10 @@ class Edge:
         self.gr_edge = GraphicEdge(self)
         # 此类一旦被初始化就在添加进scene
         self.scene.add_edge(self)
-        if eg_type == "TF":
-            self.data_dialog = Transformer_Dialog()
+        if eg_type == "TF" and end_item is not None:
+            start_index = start_item.getNodeIndex()
+            end_index = end_item.getNodeIndex()
+            self.data_dialog = Transformer_Dialog(start_index, end_index)
         elif eg_type == "TL":
             self.data_dialog = Wire_Dialog()
         else:

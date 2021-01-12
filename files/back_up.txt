@@ -1,0 +1,51 @@
+Nodes:
+Node Index:0
+Node Type:VTheta
+x = 263.0
+y = 339.0
+V = 1
+Theta = 2
+Node Index:1
+Node Type:PV
+x = 267.0
+y = 643.0
+P = 3
+V = 4
+Node Index:2
+Node Type:PQ
+x = 600.0
+y = 465.0
+P = 5
+Q = 6
+Edges:
+Edge Index:0
+Edge Type:TF
+starting point: 
+x = 313.0
+y = 389.0
+ending point: 
+x = 317.0
+y = 693.0
+Sn = a
+Pk = b
+Uk = c
+Po = d
+Io = e
+Uh = f
+Ul = g
+Edge Index:1
+Edge Type:TL
+starting point: 
+x = 317.0
+y = 693.0
+ending point: 
+x = 650.0
+y = 515.0
+type = 0
+D1 = 2
+D2 = 3
+D3 = 4
+Diameter = 5
+Line Distance = 6
+Length = 7
+S_Wire = 8

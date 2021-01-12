@@ -13,6 +13,7 @@ from PyQt5.QtGui import QPixmap, QPainterPath
 from Edge import *
 from Node import *
 from Dialog import *
+from Transformer import Transformer
 from Calculate_Distance import calculate_distance
 
 
@@ -116,19 +117,78 @@ class MainWindow(QMainWindow):
         pass
 
     def openFile(self):
-        pass
+        self.scene.edges = []
+        self.scene.nodes = []
+        self.scene.clear()
+
+        with open(str("./files/back_up.txt"), "r") as f:
+            lines = f.readlines()
+            for i in range(len(lines)):
+                if lines[i][:11] == "Node Index:":
+                    pass
+                elif lines[i][:11] == "Edge Index:":
+                    pass
+            f.close()
 
     def saveFile(self):
-        file_dialog = File_Dialog()
-        file_name = File_Dialog.file_name
-        if file_name == "":
-            return
-        else:
-            print(file_name + ".txt")
-            f = open(file_name + ".txt", "w")
+        file_name = "back_up"
+        print(file_name + ".txt")
+
+        with open(str("./files/" + file_name + ".txt"), "w") as f:
+
             f.write(str("Nodes:" + "\n"))
             for node in self.scene.nodes:
                 f.write(str("Node Index:" + str(node.gr_node.getNodeIndex()) + "\n"))
+                f.write(str("Node Type:" + str(node.type) + "\n"))
+                f.write(str("x = " + str(node.gr_node.pos().x()) + "\n"))
+                f.write(str("y = " + str(node.gr_node.pos().y()) + "\n"))
+
+                if node.type == "PQ":
+                    f.write(str("P = " + str(node.data_dialog.PQ_text[0]) + "\n"))
+                    f.write(str("Q = " + str(node.data_dialog.PQ_text[1]) + "\n"))
+                elif node.type == "PV":
+                    f.write(str("P = " + str(node.data_dialog.PV_text[0]) + "\n"))
+                    f.write(str("V = " + str(node.data_dialog.PV_text[1]) + "\n"))
+                elif node.type == "VTheta":
+                    f.write(str("V = " + str(node.data_dialog.VA_text[0]) + "\n"))
+                    f.write(str("Theta = " + str(node.data_dialog.VA_text[1]) + "\n"))
+                else:
+                    print("Error! Saving Wrong-typed nodes!")
+
+            f.write(str("Edges:" + "\n"))
+            for edge in self.scene.edges:
+                f.write(str("Edge Index:" + str(edge.gr_edge.getEdgeIndex()) + "\n"))
+                f.write(str("Edge Type:" + str(edge.type) + "\n"))
+                f.write(str("starting point: " + "\n"))
+                f.write(str("x = " + str(edge.gr_edge.pos_src[0]) + "\n"))
+                f.write(str("y = " + str(edge.gr_edge.pos_src[1]) + "\n"))
+                f.write(str("ending point: " + "\n"))
+                f.write(str("x = " + str(edge.gr_edge.pos_dst[0]) + "\n"))
+                f.write(str("y = " + str(edge.gr_edge.pos_dst[1]) + "\n"))
+
+                if edge.type == "TL":
+                    f.write(str("type = " + str(edge.data_dialog.wire_text[0]) + "\n"))
+                    f.write(str("D1 = " + str(edge.data_dialog.wire_text[1]) + "\n"))
+                    f.write(str("D2 = " + str(edge.data_dialog.wire_text[2]) + "\n"))
+                    f.write(str("D3 = " + str(edge.data_dialog.wire_text[3]) + "\n"))
+                    f.write(str("Diameter = " + str(edge.data_dialog.wire_text[4]) + "\n"))
+                    f.write(str("Line Distance = " + str(edge.data_dialog.wire_text[5]) + "\n"))
+                    f.write(str("Length = " + str(edge.data_dialog.wire_text[6]) + "\n"))
+                    f.write(str("S_Wire = " + str(edge.data_dialog.wire_text[7]) + "\n"))
+                elif edge.type == "TF":
+                    f.write(str("Sn = " + str(edge.data_dialog.tf_text[0]) + "\n"))
+                    f.write(str("Pk = " + str(edge.data_dialog.tf_text[1]) + "\n"))
+                    f.write(str("Uk = " + str(edge.data_dialog.tf_text[2]) + "\n"))
+                    f.write(str("Po = " + str(edge.data_dialog.tf_text[3]) + "\n"))
+                    f.write(str("Io = " + str(edge.data_dialog.tf_text[4]) + "\n"))
+                    f.write(str("Uh = " + str(edge.data_dialog.tf_text[5]) + "\n"))
+                    f.write(str("Ul = " + str(edge.data_dialog.tf_text[6]) + "\n"))
+                else:
+                    print("Error! Saving Wrong-typed edges!")
+
+            f.close()
+            file_dialog = File_Dialog("save")
+
 
     def openGuide(self):
         pass
@@ -155,6 +215,9 @@ class MainWindow(QMainWindow):
     def add_line(self):
         self.view.selected_edge_type = 'TL'
         self.view.addEdgeHandle('TL')
+
+    def calculate_result(self):
+        pass
 
     def initWindow(self):
         # ---- Menu Bar Actions ----
@@ -210,6 +273,10 @@ class MainWindow(QMainWindow):
         add_line_action = QAction(QIcon('./images/line.png'), 'Add Transmission Line', self)
         add_line_action.setStatusTip('Add Transmission Line')
         add_line_action.triggered.connect(self.add_line)
+        # Calculate
+        calculate_action = QAction(QIcon('./images/calculate.png'), 'Calculate Result', self)
+        calculate_action.setStatusTip('Calculate Result')
+        calculate_action.triggered.connect(self.calculate_result)
 
         # ---- Bar Implementation ----
         # status bar
@@ -238,11 +305,55 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(add_p_q_action)
         self.toolbar.addAction(add_transformer_action)
         self.toolbar.addAction(add_line_action)
+        self.toolbar.addAction(calculate_action)
 
         # add message to status bar
         self.status_bar.showMessage('Ready')
 
         self.show()
+
+    def getNodeTypeNumList(self):
+        self.PQ_nodes = []
+        self.PV_nodes = []
+        self.VTheta_nodes = []
+        for node in self.scene.nodes:
+            if node.type == "PQ":
+                self.PQ_nodes.append(node)
+            elif node.type == "PV":
+                self.PV_nodes.append(node)
+            elif node.type == "VTheta":
+                self.VTheta_nodes.append(node)
+            else:
+                print("Error! Getting wrong node number.")
+
+        return [len(self.PQ_nodes), len(self.PV_nodes), len(self.VTheta_nodes)]
+
+    def getNodeSum(self):
+        return 2 * sum(self.getNodeTypeNum())
+
+    def getGlobal_Y(self):
+        self.global_Y = []
+
+        for PQ_node in self.PQ_nodes:
+            self.global_Y.append(PQ_node.data_dialog.PQ_text)
+        for PV_node in self.PV_nodes:
+            self.global_Y.append(PV_node.data_dialog.PV_text)
+        for VTheta_node in self.VTheta_nodes:
+            self.global_Y.append(VTheta_node.data_dialog.VA_text)
+
+        print(self.global_Y)
+        return self.global_Y
+
+    def getTransformers(self):
+        tf_list = []
+        for edge in self.scene.edges:
+            if edge.type == "TF":
+                tf = Transformer(edge.data_dialog.tf_text[0], edge.data_dialog.tf_text[1], edge.data_dialog.tf_text[2],
+                                 edge.data_dialog.tf_text[3], edge.data_dialog.tf_text[4], edge.data_dialog.tf_text[5],
+                                 edge.data_dialog.tf_text[6], edge.data_dialog.tf_text[7], edge.data_dialog.tf_text[8])
+                tf_list.append(tf)
+        return tf_list
+
 
 
 class GraphicScene(QGraphicsScene):

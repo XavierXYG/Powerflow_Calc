@@ -1,22 +1,27 @@
 from sympy import Matrix, lambdify
-from Global_X import Global_X
+from Global_X import getGlobal_X
 from U_Coefficient import *
-from main import y_admittance
-
-admittance_matrix = y_admittance
-    # np.array([[0.12 - 0.16j, -0.12 + 0.16j],
-    #                           [-0.12 + 0.16j, 0.12 - 0.16j]])
-Global_Y = np.array([[10000000, 20000000], [242000, 0]]) #UI
-BusNum = [1, 0, 1]
+from UI import *
 
 
-def Interface(input):  # 输入为三个表达式向量
+
+# np.array([[0.12 - 0.16j, -0.12 + 0.16j],
+#                           [-0.12 + 0.16j, 0.12 - 0.16j]])
+# Global_Y = np.array([[10000000, 20000000], [242000, 0]]) #UI
+# BusNum = [1, 0, 1]
+
+
+
+def Interface(input, Global_Y, BusNum, y_admittance):  # 输入为三个表达式向量
+    Global_X = getGlobal_X(sum(BusNum) * 2)
+    admittance_matrix = y_admittance
+
     PQ_bus = PQ_ef_coefficient(admittance_matrix, Global_Y, BusNum)
     PV_bus = PV_ef_coefficient(admittance_matrix, Global_Y, BusNum)
     VA_bus = VA_ef_coefficient(Global_Y, BusNum)
     num_PV = PV_bus.shape[1]
     num_PQ = PQ_bus.shape[1]
-    num_VA = 1 * 2
+    num_VA = VA_bus.shape[1]
     num_total_bus = num_PV + num_PQ + num_VA
     tuple_PV, tuple_PQ, tuple_VA = (), (), ()
     for i in range(num_total_bus):
@@ -55,12 +60,6 @@ def Interface(input):  # 输入为三个表达式向量
         result = np.r_[result_PQ[0], result_PV[0], result_VA[0]]
     return result
 
-
-def GetBusNum(PQ_bus, PV_bus):
-    num_PV = PV_bus.shape[1]
-    num_PQ = PQ_bus.shape[1]
-    num_VA = 1*2
-    return [num_PQ, num_PV, num_VA]
 
 
 '''
