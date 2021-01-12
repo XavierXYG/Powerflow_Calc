@@ -14,7 +14,7 @@ from Dialog import *
 class Edge:
     def __init__(self, scene, eg_type, start_item, end_item):
         # 参数分别为场景、开始图元、结束图元
-        # super().__init__()
+        super().__init__()
         self.scene = scene
         self.type = eg_type
         self.start_item = start_item

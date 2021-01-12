@@ -13,7 +13,7 @@ from Dialog import *
 
 class Node:
     def __init__(self, scene, nd_type, x=500, y=500):
-        # super().__init__()
+        super().__init__()
         self.scene = scene
         self.type = nd_type
         self.gr_node = GraphicItem(self)
@@ -55,7 +55,7 @@ class GraphicItem(QGraphicsPixmapItem):
         # 如果图元被选中，就更新连线，这里更新的是所有。可以优化，只更新连接在图元上的。
         if self.isSelected():
             for gr_edge in self.scene().edges:
-                gr_edge.edge_wrap.update_positions()
+                gr_edge.update_positions()
 
     def getNodeIndex(self):
         return self.scene().nodes.index(self.node_wrap)

@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         if self.width() < desktop.width():
             self.showMaximized()
             # self.setWindowState(Qt.WindowMaximized)
-            self.pushbutton_close.move(desktop.width()-150, 10)
+            self.pushbutton_close.move(desktop.width() - 150, 10)
             self.pushbutton_max.move(desktop.width() - 100, 10)
             self.pushbutton_mini.move(desktop.width() - 50, 10)
             self.pushbutton_max.setToolTip('<b>Smaller</b>')
@@ -84,8 +84,6 @@ class MainWindow(QMainWindow):
             self.pushbutton_max.move(900, 10)
             self.pushbutton_mini.move(950, 10)
             self.pushbutton_max.setToolTip('<b>Larger</b>')
-
-
 
     def center(self):
         # 获得窗口
@@ -188,7 +186,6 @@ class MainWindow(QMainWindow):
 
             f.close()
             file_dialog = File_Dialog("save")
-
 
     def openGuide(self):
         pass
@@ -355,7 +352,6 @@ class MainWindow(QMainWindow):
         return tf_list
 
 
-
 class GraphicScene(QGraphicsScene):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -379,9 +375,7 @@ class GraphicScene(QGraphicsScene):
         self.setSceneRect(0, 0, 1000, 1000)
 
         self.nodes = []  # 存储节点
-        # self.dataflow_nodes = []  # 存储节点数据
         self.edges = []  # 存储连线
-        # self.dataflow_edges = []  # 存储连线数据
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -390,20 +384,20 @@ class GraphicScene(QGraphicsScene):
     def remove_node(self, node):
         self.nodes.remove(node)
         # 删除图元时，遍历与其连接的线，并移除
-        for edge in self.edges:
-            if edge.edge_wrap.start_item is node.gr_node or edge.edge_wrap.end_item is node.gr_node:
+        for edge in self.edges[:]:
+            if edge.start_item is node.gr_node or edge.end_item is node.gr_node:
                 self.remove_edge(edge)
         self.removeItem(node.gr_node)
 
     def add_edge(self, edge):
         self.edges.append(edge)
         self.addItem(edge.gr_edge)
-        self.edges = sorted(set(self.edges), key=self.edges.index)  # 删除重复项
+        # self.edges = sorted(set(self.edges), key=self.edges.index)  # 删除重复项
 
     def remove_edge(self, edge):
         self.edges.remove(edge)
         self.removeItem(edge.gr_edge)
-        self.edges = sorted(set(self.edges), key=self.edges.index)
+        # self.edges = sorted(set(self.edges), key=self.edges.index)
 
     # override
     def drawBackground(self, painter, rect):
@@ -508,7 +502,7 @@ class GraphicView(QGraphicsView):
         item = self.get_item_at_click(event)
         if event.button() == Qt.RightButton:  # 判断鼠标右键点击
             if isinstance(item, GraphicItem):
-                self.gr_scene.remove_node(item)
+                self.gr_scene.remove_node(item.getNodeWrap())
         elif self.edge_enable:
             if isinstance(item, GraphicItem):  # 判断点击对象是否为图元的实例, 确认起点是图元后，开始拖拽
                 self.edge_drag_start(self.enabled_edge_type, item)
@@ -523,9 +517,6 @@ class GraphicView(QGraphicsView):
             print(self.selected_item_index)
             selected_node = item.getNodeWrap()
             selected_node.data_dialog.show_dialog()
-            # dialog = QWidget()
-            # dialog.show()
-
         else:
             edge = self.get_edge_at_click(event)
             if isinstance(edge.gr_edge, GraphicEdge):
@@ -587,14 +578,6 @@ class GraphicView(QGraphicsView):
             result_edge = None
         return result_edge
 
-    # def get_edge_at_click(self, event):
-    #     """ 获取点击位置的Edge，无则返回None. """
-    #     pos = event.pos()
-    #     for edge in self.gr_scene.edges:
-    #         if edge.boundingRect().contains(pos):
-    #             return edge
-    #     return None
-
     def edge_drag_start(self, eg_type, item):
         self.drag_start_item = item
         self.drag_edge = Edge(self.gr_scene, eg_type, self.drag_start_item, None)  # 开始拖拽线条，注意到拖拽终点为None
@@ -603,7 +586,7 @@ class GraphicView(QGraphicsView):
         new_edge = Edge(self.gr_scene, eg_type, self.drag_start_item, item)  # 拖拽结束
         self.drag_edge.remove()  # 删除拖拽时画的线
         self.drag_edge = None
-        new_edge.store()  # 保存最终产生的连接线
+        # new_edge.store()  # 保存最终产生的连接线
 
 
 # class GraphicItem(QGraphicsPixmapItem):
