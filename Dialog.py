@@ -79,6 +79,7 @@ class Dialog(QWidget):
 
         # 设置子类文本框背景色和字体
         bgColor = '#d7d7d7'  # 文本框背景色
+        bgColor = '#d7d7d7'  # 文本框背景色
         self.text_style = """QLineEdit{{ color: #4C4C4C; border-width: 1px solid black;border-radius:10px;
             padding:2px 4px; background-color: {0}; color: #000000; 
                 font_family:JetBrains Mono;font-weight:bold; }} 
@@ -89,12 +90,13 @@ class Dialog(QWidget):
                    padding:2px 4px; background-color: {0}; color: #000000; 
                        font_family:JetBrains Mono;font-weight:bold; }} 
                    QComboBox:hover{{ border: 2px solid #d7d7d7;}}
-                   QComboBox:drop-down {{subcontrol-origin: padding;subcontrol-position: top right;width: 30px;font_family:JetBrains Mono;font-weight:bold; }}
-                   QComboBox QAbstractItemView{{height: 100px; border: 2px; border-radius:10px;color:#000000; selection-color: #000000; 
-                   selection-background-color: #a5def1; padding:4px, 4px,4px,4px;}}
-                   QComboBox QAbstractItemView:item{{height: 10px; min-height: 10px;}}
+                   QComboBox:drop-down {{subcontrol-origin: padding;subcontrol-position: top right;width: 30px;font_family:JetBrains Mono;font-weight:bold;}}
+                   QComboBox QAbstractItemView{{height: 100px; border: 0px; border-radius:10px;background-color:#d7d7d7; color: #000000; selection-color: #000000;font_family:JetBrains Mono;font-weight:bold; 
+                   selection-background-color: #A5DEF1; padding:5px, 5px,15px,15px;}}
+                   QComboBox QAbstractItemView:item{{min-height: 30px; }}
                    """.format(
             bgColor)
+
 
     def center(self):
         # 获得窗口
