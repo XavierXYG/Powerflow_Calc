@@ -161,6 +161,7 @@ class PQ_Dialog(Dialog):
         self.Q_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
+        self.save_text()
 
     def save_text(self):
         P = 0
@@ -209,7 +210,7 @@ class PV_Dialog(Dialog):
         self.V_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        # self.show()
+        self.save_text()
 
     def save_text(self):
         P = 0
@@ -258,7 +259,7 @@ class VA_Dialog(Dialog):
         self.A_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        # self.show()
+        self.save_text()
 
     def save_text(self):
         V = 0
@@ -365,7 +366,7 @@ class Wire_Dialog(Dialog):
 
         self.wire_text = []
         self.set_button.clicked.connect(lambda: self.save_text())
-        # self.show()
+        self.save_text()
 
     def selected_type(self):
         if self.type_select.highlighted():
@@ -384,25 +385,25 @@ class Wire_Dialog(Dialog):
 
         if self.type_select.currentIndex() != "":
             try:
-                the_type = float(self.type_select.currentIndex()) + 1
+                the_type = float(self.type_select.currentIndex())
             except ValueError:
                 pass
 
         if self.D1_data.text() != "":
             try:
-                D1 = float(self.D1_data.text()) * 1000
+                D1 = float(self.D1_data.text())
             except ValueError:
                 pass
 
         if self.D2_data.text() != "":
             try:
-                D2 = float(self.D2_data.text()) * 1000
+                D2 = float(self.D2_data.text())
             except ValueError:
                 pass
 
         if self.D3_data.text() != "":
             try:
-                D3 = float(self.D3_data.text()) * 1000
+                D3 = float(self.D3_data.text())
             except ValueError:
                 pass
 
@@ -519,7 +520,7 @@ class Transformer_Dialog(Dialog):
         self.U_end_data.setStyleSheet(self.text_style)
 
         self.set_button.clicked.connect(lambda: self.save_text())
-        # self.show()
+        self.save_text()
 
     def save_text(self):
         Sn = 0
@@ -630,19 +631,19 @@ class Power_Dialog(Dialog):
         # self.setWindowTitle('Loading File')
 
         num = len(power_flow)
-        self.resize(750, 290+60 * num)
-        self.set_button.move(550, 60 * num+240)
-        self.cancel_button.move(650, 60 * num+240)
+        self.resize(750, 350+15 * num)
+        self.set_button.move(550, 15 * num+290)
+        self.cancel_button.move(650, 15 * num+290)
         i = 0
         for key in power_flow:
             labels = QLabel(self)
             labels.setText('S' + key + ' = ')
-            labels.move(100, 125+60*i)
+            labels.move(100, 125+15*i)
             labels.setStyleSheet(self.label_style)
             i = i+1
             contents = QLabel(self)
-            contents.setText(str(power_flow[key]))
-            contents.move(170, 65+60*i)
+            contents.setText(str(power_flow[key]) + 'MVA')
+            contents.move(170, 105+15*i)
             contents.setStyleSheet(self.label_style)
             i = i+1
 
@@ -665,19 +666,19 @@ class Delta_Power_Dialog(Dialog):
         # self.setWindowTitle('Loading File')
 
         num = len(delta_power_flow)
-        self.resize(750, 290+60 * num)
-        self.set_button.move(550, 60 * num+240)
-        self.cancel_button.move(650, 60 * num+240)
+        self.resize(750, 350+15 * num)
+        self.set_button.move(550, 15 * num+290)
+        self.cancel_button.move(650, 15 * num+290)
         i = 0
         for key in delta_power_flow:
             labels = QLabel(self)
             labels.setText('S' + key + ' = ')
-            labels.move(100, 125+60*i)
+            labels.move(100, 125+15*i)
             labels.setStyleSheet(self.label_style)
             i = i+1
             contents = QLabel(self)
-            contents.setText(str(delta_power_flow[key]))
-            contents.move(170, 65+60*i)
+            contents.setText(str(delta_power_flow[key]) + 'MVA')
+            contents.move(170, 105+15*i)
             contents.setStyleSheet(self.label_style)
             i = i+1
 
@@ -691,7 +692,7 @@ class Delta_Power_Dialog(Dialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = Delta_Power_Dialog({'01': (-50-50.00000000000001j), '10': (51.70440615672398+31.271103323989134j)})
+    win = Power_Dialog({'01': (-50-50.00000000000001j), '10': (51.70440615672398+31.271103323989134j)})
     win.show()
     # print(win.tf_text)
     sys.exit(app.exec_())

@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.active = True
+        self.active = False
 
         self.status_bar = self.statusBar()
         self.menu_bar = self.menuBar()
@@ -168,7 +168,7 @@ class MainWindow(QMainWindow):
                     temp_edge = Edge(self.scene, temp_type, temp_start_item, temp_end_item)
 
                     if temp_type == "TL":
-                        temp_edge.data_dialog.type_select.selectIndex = int(lines[i + 10][-2])
+                        temp_edge.data_dialog.type_select.setCurrentIndex(int(lines[i + 10][7]))
                         temp_edge.data_dialog.D1_data.setText(lines[i + 11][5:-1])
                         temp_edge.data_dialog.D2_data.setText(lines[i + 12][5:-1])
                         temp_edge.data_dialog.D3_data.setText(lines[i + 13][5:-1])
@@ -206,13 +206,13 @@ class MainWindow(QMainWindow):
                 f.write(str("y = " + str(node.gr_node.pos().y()) + "\n"))
 
                 if node.type == "PQ":
-                    f.write(str("P = " + str(node.data_dialog.PQ_text[0] / 1e6) + "\n"))
-                    f.write(str("Q = " + str(node.data_dialog.PQ_text[1] / 1e6) + "\n"))
+                    f.write(str("P = " + str(node.data_dialog.PQ_text[0]) + "\n"))
+                    f.write(str("Q = " + str(node.data_dialog.PQ_text[1]) + "\n"))
                 elif node.type == "PV":
-                    f.write(str("P = " + str(node.data_dialog.PV_text[0] / 1e6) + "\n"))
-                    f.write(str("V = " + str(node.data_dialog.PV_text[1] / 1e3) + "\n"))
+                    f.write(str("P = " + str(node.data_dialog.PV_text[0]) + "\n"))
+                    f.write(str("V = " + str(node.data_dialog.PV_text[1]) + "\n"))
                 elif node.type == "VTheta":
-                    f.write(str("V = " + str(node.data_dialog.VA_text[0] / 1e3) + "\n"))
+                    f.write(str("V = " + str(node.data_dialog.VA_text[0]) + "\n"))
                     f.write(str("A = " + str(node.data_dialog.VA_text[1]) + "\n"))
                 else:
                     print("Error! Saving Wrong-typed nodes!")
@@ -232,9 +232,9 @@ class MainWindow(QMainWindow):
 
                 if edge.type == "TL":
                     f.write(str("type = " + str(edge.data_dialog.wire_text[0]) + "\n"))
-                    f.write(str("D1 = " + str(edge.data_dialog.wire_text[1] / 1e3) + "\n"))
-                    f.write(str("D2 = " + str(edge.data_dialog.wire_text[2] / 1e3) + "\n"))
-                    f.write(str("D3 = " + str(edge.data_dialog.wire_text[3] / 1e3) + "\n"))
+                    f.write(str("D1 = " + str(edge.data_dialog.wire_text[1]) + "\n"))
+                    f.write(str("D2 = " + str(edge.data_dialog.wire_text[2]) + "\n"))
+                    f.write(str("D3 = " + str(edge.data_dialog.wire_text[3]) + "\n"))
                     f.write(str("Diameter = " + str(edge.data_dialog.wire_text[4]) + "\n"))
                     f.write(str("Line Distance = " + str(edge.data_dialog.wire_text[5]) + "\n"))
                     f.write(str("Length = " + str(edge.data_dialog.wire_text[6]) + "\n"))
@@ -271,8 +271,9 @@ class MainWindow(QMainWindow):
         self.view.addNodeHandle('PQ')
 
     def add_p_v(self):
-        self.view.selected_node_type = 'PV'
-        self.view.addNodeHandle('PV')
+        # self.view.selected_node_type = 'PV'
+        # self.view.addNodeHandle('PV')
+        pass
 
     def add_transformer(self):
         self.view.selected_edge_type = 'TF'
@@ -440,13 +441,17 @@ class MainWindow(QMainWindow):
         return tf_list
 
     def calculate_result(self):
-        run_algorithm(self)
+        if len(self.scene.nodes) and len(self.scene.edges):
+            self.active = True
+            run_algorithm(self)
 
     def power_show(self):
-        power_real_show(self)
+        if self.active:
+            power_real_show(self)
 
     def delta_power_show(self):
-        delta_power_real_show(self)
+        if self.active:
+            delta_power_real_show(self)
 
 
 class GraphicScene(QGraphicsScene):

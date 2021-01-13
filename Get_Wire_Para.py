@@ -20,7 +20,8 @@ def r_6(diameter, line_distance):
 
 
 def get_wire(type, Da, Db, Dc, diameter, line_distance, length, S_wire):
-    Dm = (Da * Db * Dc) ** (1 / 3)
+    Dm = (Da * Db * Dc) ** (1 / 3) * 1000
+    type = type + 1
     if type == 1:  # type 1:cu + n=1
         rou = 18.8
         n = 1

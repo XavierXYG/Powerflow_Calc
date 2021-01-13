@@ -1,0 +1,74 @@
+Nodes:
+Node Index:0
+Node Type:VTheta
+x = 101.0
+y = 271.0
+V = 242.0
+A = 0.0
+Node Index:1
+Node Type:PQ
+x = 639.0
+y = 239.0
+P = 80.0
+Q = 80.0
+Node Index:2
+Node Type:PQ
+x = 399.0
+y = 580.0
+P = 50.0
+Q = 10.0
+Edges:
+Edge Index:0
+Edge Type:TL
+starting point: 
+x = 151.0
+y = 321.0
+start item index = 0
+ending point: 
+x = 689.0
+y = 289.0
+end item index = 1
+type = 3.0
+D1 = 10.0
+D2 = 10.0
+D3 = 20.0
+Diameter = 24.26
+Line Distance = 0.0
+Length = 100.0
+S_Wire = 300.0
+Edge Index:1
+Edge Type:TL
+starting point: 
+x = 151.0
+y = 321.0
+start item index = 0
+ending point: 
+x = 449.0
+y = 630.0
+end item index = 2
+type = 3.0
+D1 = 10.0
+D2 = 10.0
+D3 = 20.0
+Diameter = 24.26
+Line Distance = 0.0
+Length = 100.0
+S_Wire = 300.0
+Edge Index:2
+Edge Type:TL
+starting point: 
+x = 449.0
+y = 630.0
+start item index = 2
+ending point: 
+x = 689.0
+y = 289.0
+end item index = 1
+type = 3.0
+D1 = 10.0
+D2 = 10.0
+D3 = 20.0
+Diameter = 24.26
+Line Distance = 0.0
+Length = 100.0
+S_Wire = 300.0
