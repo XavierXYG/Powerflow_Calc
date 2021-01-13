@@ -21,7 +21,7 @@ from Get_Wire_Para import Admittance_wire
 from Get_Admittance import get_admittance_matrix
 from Newton import Newton
 from Global_X import *
-from Calculate_S import power_flow
+from Calculate_S import *
 from Interface import *
 from sympy import *
 
@@ -341,6 +341,18 @@ class MainWindow(QMainWindow):
         calculate_action.setStatusTip('Calculate Result')
         calculate_action.triggered.connect(self.calculate_result)
 
+
+        #show_Powerflow
+        powerflow_action = QAction(QIcon('./images/power.png'), 'Calculate Result', self)
+        powerflow_action.setStatusTip('Calculate node power')
+        powerflow_action.triggered.connect(lambda: self.power_show())
+
+
+        #show_delta_Powerflow
+        delta_powerflow_action = QAction(QIcon('./images/delta_power.png'), 'Calculate Result', self)
+        delta_powerflow_action.setStatusTip('Calculate delta power used by edge resistnace')
+        delta_powerflow_action.triggered.connect(lambda: self.delta_power_show())
+
         # ---- Bar Implementation ----
         # status bar
         # self.status_bar = self.statusBar()
@@ -429,6 +441,16 @@ class MainWindow(QMainWindow):
 
     def calculate_result(self):
         run_algorithm(self)
+
+
+
+    def power_show(self):
+        len(self.scene.nodes)
+
+
+    def delta_power_show(self):
+        len(self.scene.nodes)
+
 
 
 class GraphicScene(QGraphicsScene):
@@ -741,8 +763,9 @@ def run_algorithm(demo):
     print("7")
     print("Power Flow: \n")
     S_Topology, delta_S_Topology = power_flow(result, y_admittance, demo.scene.nodes, demo.scene)
-    print(S_Topology)
-    print(delta_S_Topology)
+    dict_S, dict_delta_S = adjust_Power_flow_Data(S_Topology, delta_S_Topology)
+    print(dict_S)
+    print(dict_delta_S)
 
 
 def demo_run():
