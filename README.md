@@ -12,4 +12,5 @@
 ### 输入完成后点击绿色剪头进行计算
 ### 计算结果点击 S 和 △S 查看功率流计算结果
 ### File --> save file 保存为back_up.txt文件，File --> open file 打开mission.txt文件，载入后直接计算
-   
+
+## 项目地址：https://github.com/XavierXYG/Powerflow_Calc.git
