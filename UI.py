@@ -341,17 +341,15 @@ class MainWindow(QMainWindow):
         calculate_action.setStatusTip('Calculate Result')
         calculate_action.triggered.connect(self.calculate_result)
 
-
-        #show_Powerflow
-        powerflow_action = QAction(QIcon('./images/power.png'), 'Calculate Result', self)
+        # show_Powerflow
+        powerflow_action = QAction(QIcon('./images/power.png'), 'Calculate Power', self)
         powerflow_action.setStatusTip('Calculate node power')
-        powerflow_action.triggered.connect(lambda: self.power_show())
+        powerflow_action.triggered.connect(self.power_show)
 
-
-        #show_delta_Powerflow
-        delta_powerflow_action = QAction(QIcon('./images/delta_power.png'), 'Calculate Result', self)
+        # show_delta_Powerflow
+        delta_powerflow_action = QAction(QIcon('./images/delta_power.png'), 'Calculate Delta Power', self)
         delta_powerflow_action.setStatusTip('Calculate delta power used by edge resistnace')
-        delta_powerflow_action.triggered.connect(lambda: self.delta_power_show())
+        delta_powerflow_action.triggered.connect(self.delta_power_show)
 
         # ---- Bar Implementation ----
         # status bar
@@ -391,6 +389,8 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(add_transformer_action)
         self.toolbar.addAction(add_line_action)
         self.toolbar.addAction(calculate_action)
+        self.toolbar.addAction(powerflow_action)
+        self.toolbar.addAction(delta_powerflow_action)
 
         # add message to status bar
         self.status_bar.showMessage('Ready')
@@ -442,15 +442,11 @@ class MainWindow(QMainWindow):
     def calculate_result(self):
         run_algorithm(self)
 
-
-
     def power_show(self):
-        len(self.scene.nodes)
-
+        power_real_show(self)
 
     def delta_power_show(self):
-        len(self.scene.nodes)
-
+        delta_power_real_show(self)
 
 
 class GraphicScene(QGraphicsScene):
@@ -713,6 +709,16 @@ class GraphicView(QGraphicsView):
 #     def getNodeIndex(self):
 #         return self.scene().nodes.index(self)
 
+def power_real_show(demo):
+    dict_S, dict_delta_S = run_algorithm(demo)
+    power_show = Power_Dialog(dict_S)
+
+
+def delta_power_real_show(demo):
+    dict_S, dict_delta_S = run_algorithm(demo)
+    delta_power_show = Power_Dialog(dict_delta_S)
+
+
 def run_algorithm(demo):
     print("0")
     temp_Topology = Admittance_wire(demo.scene.nodes, demo.scene)
@@ -737,7 +743,7 @@ def run_algorithm(demo):
     print("5")
     factor = 220
     if len(network_1.tfs_):
-        factor = network_1.U_init()  -  random.random()
+        factor = network_1.U_init() - random.random()
     else:
         for node in demo.scene.nodes:
             if node.type == "VTheta":
@@ -766,6 +772,7 @@ def run_algorithm(demo):
     dict_S, dict_delta_S = adjust_Power_flow_Data(S_Topology, delta_S_Topology)
     print(dict_S)
     print(dict_delta_S)
+    return dict_S, dict_delta_S
 
 
 def demo_run():

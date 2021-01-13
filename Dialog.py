@@ -620,9 +620,78 @@ class File_Dialog(Dialog):
         self.close()
 
 
+class Power_Dialog(Dialog):
+    def __init__(self, power_flow, parent=None):
+        super().__init__(parent)
+        self.Name_label = QLabel(self)
+        self.Name_label.move(50, 75)
+        self.Name_label.setStyleSheet(self.label_style)
+        self.Name_label.setText('Power flow of nodes')
+        # self.setWindowTitle('Loading File')
+
+        num = len(power_flow)
+        self.resize(750, 290+60 * num)
+        self.set_button.move(550, 60 * num+240)
+        self.cancel_button.move(650, 60 * num+240)
+        i = 0
+        for key in power_flow:
+            labels = QLabel(self)
+            labels.setText('S' + key + ' = ')
+            labels.move(100, 125+60*i)
+            labels.setStyleSheet(self.label_style)
+            i = i+1
+            contents = QLabel(self)
+            contents.setText(str(power_flow[key]))
+            contents.move(170, 65+60*i)
+            contents.setStyleSheet(self.label_style)
+            i = i+1
+
+
+        self.set_button.clicked.connect(lambda: self.close_dialog())
+        self.show()
+
+    def close_dialog(self):
+        self.close()
+
+
+
+class Delta_Power_Dialog(Dialog):
+    def __init__(self, delta_power_flow, parent=None):
+        super().__init__(parent)
+        self.Name_label = QLabel(self)
+        self.Name_label.move(50, 75)
+        self.Name_label.setStyleSheet(self.label_style)
+        self.Name_label.setText('Delta Power flow of nodes')
+        # self.setWindowTitle('Loading File')
+
+        num = len(delta_power_flow)
+        self.resize(750, 290+60 * num)
+        self.set_button.move(550, 60 * num+240)
+        self.cancel_button.move(650, 60 * num+240)
+        i = 0
+        for key in delta_power_flow:
+            labels = QLabel(self)
+            labels.setText('S' + key + ' = ')
+            labels.move(100, 125+60*i)
+            labels.setStyleSheet(self.label_style)
+            i = i+1
+            contents = QLabel(self)
+            contents.setText(str(delta_power_flow[key]))
+            contents.move(170, 65+60*i)
+            contents.setStyleSheet(self.label_style)
+            i = i+1
+
+
+        self.set_button.clicked.connect(lambda: self.close_dialog())
+        self.show()
+
+    def close_dialog(self):
+        self.close()
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    win = VA_Dialog()
+    win = Delta_Power_Dialog({'01': (-50-50.00000000000001j), '10': (51.70440615672398+31.271103323989134j)})
     win.show()
     # print(win.tf_text)
     sys.exit(app.exec_())
