@@ -25,7 +25,15 @@ def power_flow(U_matrix, admittance_matrix, nodes, scene):
                                 uj.conjugate() * yj0.conjugate() + (uj.conjugate() - ui.conjugate()) * yij.conjugate())
                     delta_S_Topology[i][j] = S_Topology[i][j] + S_Topology[j][i]
                     delta_S_Topology[j][i] = delta_S_Topology[i][j]
-    return [S_Topology, delta_S_Topology]
+    return S_Topology, delta_S_Topology
+
+
+def adjust_Power_flow_Data(Power_list_Topology):
+    power_dict = {}
+
+    pass
+
+
 
 
 

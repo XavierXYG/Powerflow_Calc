@@ -740,7 +740,9 @@ def run_algorithm(demo):
 
     print("7")
     print("Power Flow: \n")
-    print(power_flow(result, y_admittance, demo.scene.nodes, demo.scene))
+    S_Topology, delta_S_Topology = power_flow(result, y_admittance, demo.scene.nodes, demo.scene)
+    print(S_Topology)
+    print(delta_S_Topology)
 
 
 def demo_run():
