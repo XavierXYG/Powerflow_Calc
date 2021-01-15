@@ -1,3 +1,6 @@
+## 写在前面
+### 感谢 @Capco707 @bjzhb666 和 @hangzhiyiwei 三位大佬带我摸鱼[旺柴]
+
 # Intelli power
 
 ###  Intelli power is a software based on Python3, which can  calculate complicated system power flow with high accuracy during few seconds.
